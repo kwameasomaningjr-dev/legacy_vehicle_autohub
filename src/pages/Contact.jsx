@@ -52,7 +52,7 @@ export default function Contact() {
           access_key: formData.accessKey,
           subject: `Contact Page Booking: ${selectedCarObj.name} - ${formData.fullName}`,
           from_name: "Legacy Vehicle Hub Contact Form",
-          to_email: "info@legacyautohubgh.com",
+          to_email: "info@legacyvehiclehubgh.com",
           "Vehicle Name": selectedCarObj.name,
           "Travel Scope": formData.travelScope,
           "Estimated Rate": `GH₵ ${estimatedRate.toLocaleString()}`,
@@ -453,7 +453,7 @@ export default function Contact() {
               <div className="flex items-center justify-between">
                 <h3 className="text-sm font-bold text-white flex items-center gap-2">
                   <MapPin className="w-4 h-4 text-brand-400" />
-                  <span>Accra Fleet Headquarters</span>
+                  <span>Tema Fleet Headquarters</span>
                 </h3>
                 <span className="text-[10px] text-emerald-400 font-semibold px-2 py-0.5 rounded bg-emerald-500/10 border border-emerald-500/20">
                   Open 24/7
@@ -463,8 +463,8 @@ export default function Contact() {
               {/* Map Iframe */}
               <div className="relative h-80 sm:h-96 rounded-2xl overflow-hidden border border-white/10 bg-dark-900">
                 <iframe
-                  title="Legacy Vehicle Hub Tema Location Map"
-                  src="https://maps.app.goo.gl/tu9Dy8RmvqGqNxW4A?g_st=iw"
+                  title="Legacy Vehicle Hub, Driving School, Tema Location Map"
+                  src="https://www.google.com/maps?q=Legacy+Vehicle+Hub%2C+Driving+School%2C+Tema&output=embed"
                   width="100%"
                   height="100%"
                   style={{ border: 0, filter: 'invert(90%) hue-rotate(180deg)' }}

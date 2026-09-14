@@ -115,7 +115,12 @@ export default function Footer() {
 
               <div className="flex items-center gap-3">
                 <Mail className="w-4 h-4 text-brand-500 shrink-0" />
-                <a href="mailto:info@legacyvehiclehubgh.com" className="hover:text-white transition-colors text-xs">
+                <a
+                  href="https://mail.google.com/mail/?view=cm&fs=1&to=info%40legacyvehiclehubgh.com&su=Vehicle%20Rental%20Inquiry&body=Hello%20Legacy%20Vehicle%20Hub%2C%0A%0AI%20would%20like%20to%20make%20a%20vehicle%20rental%20inquiry."
+                  target="_blank"
+                  rel="noreferrer"
+                  className="hover:text-white transition-colors text-xs"
+                >
                   info@legacyvehiclehubgh.com
                 </a>
               </div>

@@ -45,7 +45,7 @@ export default function EmailBookingModal({ car = null, onClose, defaultScope = 
         access_key: formData.accessKey,
         subject: `New Rental Request: ${selectedCarObj.name} (${travelScope}) - ${formData.fullName}`,
         from_name: "Legacy Vehicle Hub Booking System",
-        to_email: "info@legacyautohubgh.com",
+        to_email: "info@legacyvehiclehubgh.com",
         "Vehicle Name": selectedCarObj.name,
         "Vehicle Category": selectedCarObj.category,
         "Travel Scope": travelScope,
