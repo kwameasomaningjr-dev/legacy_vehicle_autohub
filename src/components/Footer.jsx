@@ -16,7 +16,7 @@ export default function Footer() {
             <Link to="/" className="flex items-center gap-3">
               <div className="w-12 h-12 rounded-xl overflow-hidden bg-white p-1 shadow-lg shadow-brand-500/20 border border-brand-500/30">
                 <img
-                  src="/logo.jpeg"
+                  src="/logo-gold-navy.jpg"
                   alt="Legacy Vehicle Hub Logo"
                   className="w-full h-full object-contain"
                 />

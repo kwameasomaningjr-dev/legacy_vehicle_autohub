@@ -1,12 +1,14 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Search, Filter, RotateCcw, Car, AlertTriangle, Layers, SlidersHorizontal } from 'lucide-react';
-import { CARS_DATA, CATEGORIES, TRANSMISSIONS } from '../data/cars';
+import { CATEGORIES, TRANSMISSIONS } from '../data/cars';
+import { useCars } from '../context/CarContext';
 import CarCard from '../components/CarCard';
 import CarDetailModal from '../components/CarDetailModal';
 
 export default function Cars() {
   const [searchParams, setSearchParams] = useSearchParams();
+  const { cars } = useCars();
 
   // Filters state initialized from query params if available
   const [searchQuery, setSearchQuery] = useState(searchParams.get("search") || "");
@@ -30,7 +32,7 @@ export default function Cars() {
 
   // Filter cars logic
   const filteredCars = useMemo(() => {
-    return CARS_DATA.filter((car) => {
+    return cars.filter((car) => {
       // Search text filter
       const matchesSearch = car.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
                             car.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -44,7 +46,7 @@ export default function Cars() {
 
       return matchesSearch && matchesCategory && matchesTransmission;
     });
-  }, [searchQuery, selectedCategory, selectedTransmission]);
+  }, [cars, searchQuery, selectedCategory, selectedTransmission]);
 
   const handleResetFilters = () => {
     setSearchQuery("");
@@ -164,7 +166,7 @@ export default function Cars() {
             {/* Results count & Reset button */}
             <div className="flex items-center justify-between sm:justify-end gap-3 text-xs shrink-0">
               <span className="text-slate-600 dark:text-slate-400">
-                Showing <strong className="text-slate-900 dark:text-white font-bold">{filteredCars.length}</strong> of {CARS_DATA.length} cars
+                Showing <strong className="text-slate-900 dark:text-white font-bold">{filteredCars.length}</strong> of {cars.length} cars
               </span>
 
               {(selectedCategory !== "All" || selectedTransmission !== "All" || searchQuery !== "") && (

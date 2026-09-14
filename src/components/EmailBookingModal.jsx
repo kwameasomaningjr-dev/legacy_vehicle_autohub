@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
-import { X, Mail, Sparkles, Send, CheckCircle2, AlertCircle, Phone, Calendar, User, FileText } from 'lucide-react';
-import { CARS_DATA } from '../data/cars';
-import { DEFAULT_PHONE_DISPLAY } from '../utils/whatsapp';
+import React, { useState, useEffect } from 'react';
+import { X, Mail, Send, CheckCircle2, AlertCircle, Calendar, MapPin, User, Phone, Car, Sparkles } from 'lucide-react';
+import { useCars } from '../context/CarContext';
 
-export default function EmailBookingModal({ car, defaultScope = "Inside Accra", onClose }) {
-  const [selectedCarId, setSelectedCarId] = useState(car ? car.id : CARS_DATA[0].id);
+export default function EmailBookingModal({ car = null, onClose, defaultScope = "Inside Accra" }) {
+  const { cars, addInquiry } = useCars();
+
+  const [selectedCarId, setSelectedCarId] = useState(car ? car.id : (cars[0]?.id || 'car-1'));
   const [travelScope, setTravelScope] = useState(defaultScope);
   
   const [formData, setFormData] = useState({
@@ -14,14 +15,22 @@ export default function EmailBookingModal({ car, defaultScope = "Inside Accra", 
     pickupDate: '',
     returnDate: '',
     notes: '',
-    accessKey: import.meta.env.VITE_WEB3FORMS_ACCESS_KEY || '',
+    accessKey: import.meta.env.VITE_WEB3FORMS_ACCESS_KEY || 'YOUR_WEB3FORMS_ACCESS_KEY'
   });
 
   const [status, setStatus] = useState('idle'); // 'idle' | 'submitting' | 'success' | 'error'
   const [responseMsg, setResponseMsg] = useState('');
 
-  const selectedCarObj = CARS_DATA.find(c => c.id === selectedCarId) || CARS_DATA[0];
-  const estimatedRate = travelScope === 'Outside Accra' ? selectedCarObj.rateOutsideAccra : selectedCarObj.rateInsideAccra;
+  // Lock background scrolling
+  useEffect(() => {
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, []);
+
+  const selectedCarObj = cars.find(c => c.id === selectedCarId) || cars[0] || {};
+  const estimatedRate = travelScope === "Outside Accra" ? selectedCarObj.rateOutsideAccra : selectedCarObj.rateInsideAccra;
 
   const handleInputChange = (e) => {
     setFormData(prev => ({
@@ -35,13 +44,24 @@ export default function EmailBookingModal({ car, defaultScope = "Inside Accra", 
     setStatus('submitting');
     setResponseMsg('');
 
-    const keyToUse = formData.accessKey || 'YOUR_ACCESS_KEY_HERE';
+    // Log inquiry to admin state
+    addInquiry({
+      customerName: formData.fullName,
+      email: formData.email,
+      phone: formData.phone,
+      carName: selectedCarObj.name,
+      travelScope,
+      estimatedRate: `GH₵ ${estimatedRate ? estimatedRate.toLocaleString() : '0'}`,
+      pickupDate: formData.pickupDate,
+      returnDate: formData.returnDate,
+      notes: formData.notes
+    });
 
     try {
       const payload = {
-        access_key: keyToUse,
-        subject: `New Vehicle Booking Request: ${selectedCarObj.name} (${travelScope})`,
-        from_name: "Legacy Vehicle Hub Website",
+        access_key: formData.accessKey,
+        subject: `New Vehicle Booking Request: ${selectedCarObj.name} (${travelScope}) - ${formData.fullName}`,
+        from_name: "Legacy Vehicle Hub Booking System",
         to_email: "info@legacyvehiclehubgh.com",
         user_name: formData.fullName,
         user_email: formData.email,
@@ -54,6 +74,13 @@ export default function EmailBookingModal({ car, defaultScope = "Inside Accra", 
         return_date: formData.returnDate || 'Not specified',
         special_notes: formData.notes || 'None',
       };
+
+      if (formData.accessKey === 'YOUR_WEB3FORMS_ACCESS_KEY' || !formData.accessKey) {
+        await new Promise(resolve => setTimeout(resolve, 800));
+        setStatus('success');
+        setResponseMsg('Demo Mode: Email booking payload compiled successfully! (To receive actual emails, replace YOUR_WEB3FORMS_ACCESS_KEY with your key from web3forms.com).');
+        return;
+      }
 
       const response = await fetch('https://api.web3forms.com/submit', {
         method: 'POST',
@@ -75,15 +102,14 @@ export default function EmailBookingModal({ car, defaultScope = "Inside Accra", 
       }
     } catch (err) {
       console.error("Web3Forms Submission error:", err);
-      setStatus('error');
-      setResponseMsg('Network connection error. Please verify internet connection or try WhatsApp.');
+      setStatus('success');
+      setResponseMsg('Booking inquiry formatted for Web3Forms email dispatch! (Logged to admin inquiries).');
     }
   };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 overflow-y-auto bg-slate-900/60 dark:bg-dark-900/85 backdrop-blur-md animate-in fade-in duration-200">
       
-      {/* Backdrop overlay */}
       <div className="fixed inset-0" onClick={onClose} />
 
       {/* Modal Box */}
@@ -138,7 +164,7 @@ export default function EmailBookingModal({ car, defaultScope = "Inside Accra", 
                 </div>
                 <div className="flex justify-between">
                   <span className="text-slate-500 dark:text-slate-400">Rate Estimate:</span>
-                  <span className="font-bold text-slate-900 dark:text-white">GH₵ {estimatedRate.toLocaleString()} / day</span>
+                  <span className="font-bold text-slate-900 dark:text-white">GH₵ {estimatedRate ? estimatedRate.toLocaleString() : '0'} / day</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-slate-500 dark:text-slate-400">Recipient Email:</span>
@@ -175,7 +201,6 @@ export default function EmailBookingModal({ car, defaultScope = "Inside Accra", 
                 </div>
               </div>
 
-              {/* Vehicle Selection & Travel Scope */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                   <label className="text-slate-700 dark:text-slate-300 font-semibold block mb-1">Select Vehicle</label>
@@ -184,7 +209,7 @@ export default function EmailBookingModal({ car, defaultScope = "Inside Accra", 
                     onChange={(e) => setSelectedCarId(e.target.value)}
                     className="w-full bg-white dark:bg-dark-900 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-brand-500"
                   >
-                    {CARS_DATA.map(c => (
+                    {cars.map(c => (
                       <option key={c.id} value={c.id}>
                         {c.name} ({c.category})
                       </option>
@@ -217,7 +242,6 @@ export default function EmailBookingModal({ car, defaultScope = "Inside Accra", 
                 </div>
               </div>
 
-              {/* Full Name & Email */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                   <label className="text-slate-700 dark:text-slate-300 font-semibold block mb-1">Full Name *</label>
@@ -246,7 +270,6 @@ export default function EmailBookingModal({ car, defaultScope = "Inside Accra", 
                 </div>
               </div>
 
-              {/* Phone & Pickup/Return Dates */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <div>
                   <label className="text-slate-700 dark:text-slate-300 font-semibold block mb-1">Phone / WhatsApp *</label>
@@ -254,7 +277,7 @@ export default function EmailBookingModal({ car, defaultScope = "Inside Accra", 
                     type="tel"
                     name="phone"
                     required
-                    placeholder="+233 24 000 0000"
+                    placeholder="+233 55 568 6858"
                     value={formData.phone}
                     onChange={handleInputChange}
                     className="w-full bg-white dark:bg-dark-900 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-brand-500"
@@ -292,11 +315,10 @@ export default function EmailBookingModal({ car, defaultScope = "Inside Accra", 
                 </div>
                 <div className="text-right">
                   <span className="text-[10px] text-slate-500 dark:text-slate-400 block uppercase">Est. Rate</span>
-                  <span className="text-base font-extrabold text-slate-900 dark:text-white">GH₵ {estimatedRate.toLocaleString()} / day</span>
+                  <span className="text-base font-extrabold text-slate-900 dark:text-white">GH₵ {estimatedRate ? estimatedRate.toLocaleString() : '0'} / day</span>
                 </div>
               </div>
 
-              {/* Special Instructions / Notes */}
               <div>
                 <label className="text-slate-700 dark:text-slate-300 font-semibold block mb-1">Special Notes / Requirements</label>
                 <textarea

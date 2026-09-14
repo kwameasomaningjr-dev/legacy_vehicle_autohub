@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Phone, Menu, X, ShieldCheck, MessageSquare, Sun, Moon } from 'lucide-react';
+import { Phone, Menu, X, ShieldCheck, MessageSquare, Sun, Moon, Lock } from 'lucide-react';
 import { DEFAULT_PHONE_DISPLAY, SECONDARY_PHONE_DISPLAY, DEFAULT_WHATSAPP_NUMBER, buildWhatsAppUrl, generateGeneralInquiryMessage } from '../utils/whatsapp';
 import { useTheme } from '../context/ThemeContext';
+import { useCars } from '../context/CarContext';
 
 export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
   const { theme, toggleTheme } = useTheme();
+  const { isAdminAuthenticated } = useCars();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -46,7 +48,7 @@ export default function Navbar() {
           <Link to="/" className="flex items-center gap-3 group shrink-0">
             <div className="relative w-11 h-11 sm:w-12 sm:h-12 rounded-xl overflow-hidden bg-white p-1 shadow-md dark:shadow-lg dark:shadow-brand-500/20 group-hover:scale-105 transition-transform border border-brand-500/30">
               <img
-                src="/logo.jpeg"
+                src="/logo-gold-navy.jpg"
                 alt="Legacy Vehicle Hub Logo"
                 className="w-full h-full object-contain"
               />
@@ -82,7 +84,16 @@ export default function Navbar() {
           </nav>
 
           {/* CTA Buttons & Theme Toggle */}
-          <div className="hidden lg:flex items-center gap-3">
+          <div className="hidden lg:flex items-center gap-2.5">
+            {/* Admin Portal Lock Icon Button */}
+            <Link
+              to={isAdminAuthenticated ? '/admin' : '/admin/login'}
+              className="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-dark-800 dark:hover:bg-dark-700 text-slate-700 dark:text-slate-300 hover:text-brand-500 dark:hover:text-brand-400 border border-slate-300 dark:border-slate-700 transition-colors"
+              title={isAdminAuthenticated ? 'Admin Dashboard' : 'Admin Portal Login'}
+            >
+              <Lock className="w-4 h-4" />
+            </Link>
+
             {/* Dark / Light Mode Toggle Button */}
             <button
               onClick={toggleTheme}
@@ -124,6 +135,14 @@ export default function Navbar() {
 
           {/* Mobile / Tablet Controls */}
           <div className="flex lg:hidden items-center gap-2">
+            <Link
+              to={isAdminAuthenticated ? '/admin' : '/admin/login'}
+              className="p-2 rounded-lg bg-slate-100 dark:bg-dark-800 text-slate-700 dark:text-slate-300 border border-slate-300 dark:border-slate-700"
+              title="Admin Portal"
+            >
+              <Lock className="w-4.5 h-4.5" />
+            </Link>
+
             {/* Theme Toggle Mobile */}
             <button
               onClick={toggleTheme}
@@ -174,6 +193,14 @@ export default function Navbar() {
           </div>
 
           <div className="mt-4 pt-4 border-t border-slate-200 dark:border-slate-800 flex flex-col gap-2.5">
+            <Link
+              to={isAdminAuthenticated ? '/admin' : '/admin/login'}
+              className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl bg-slate-100 dark:bg-dark-800 text-brand-600 dark:text-brand-400 border border-brand-500/30 font-semibold text-xs"
+            >
+              <Lock className="w-4 h-4" />
+              <span>{isAdminAuthenticated ? 'Admin Dashboard' : 'Admin Portal Login'}</span>
+            </Link>
+
             {/* Theme toggle option inside mobile drawer */}
             <button
               onClick={toggleTheme}

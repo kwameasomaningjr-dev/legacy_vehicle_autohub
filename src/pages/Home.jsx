@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Car, Search, ShieldCheck, UserCheck, Clock, MapPin, Sparkles, Phone, MessageSquare, ArrowRight, Award, Compass, KeyRound, Plane, CheckCircle2 } from 'lucide-react';
-import { CARS_DATA, CATEGORIES, TRANSMISSIONS } from '../data/cars';
+import { CATEGORIES, TRANSMISSIONS } from '../data/cars';
+import { useCars } from '../context/CarContext';
 import CarCard from '../components/CarCard';
 import CarDetailModal from '../components/CarDetailModal';
 import { DEFAULT_PHONE_DISPLAY, DEFAULT_WHATSAPP_NUMBER, buildWhatsAppUrl, generateGeneralInquiryMessage } from '../utils/whatsapp';
 
 export default function Home() {
   const navigate = useNavigate();
+  const { cars } = useCars();
 
   // Quick Filter State
   const [selectedCategory, setSelectedCategory] = useState("All");
@@ -18,7 +20,7 @@ export default function Home() {
   const [selectedCar, setSelectedCar] = useState(null);
 
   // Featured cars list (first 6)
-  const featuredCars = CARS_DATA.filter(car => car.featured).slice(0, 6);
+  const featuredCars = cars.filter(car => car.featured).slice(0, 6);
 
   const handleQuickSearch = (e) => {
     e.preventDefault();
@@ -31,52 +33,53 @@ export default function Home() {
 
   return (
     <div className="min-h-screen space-y-16 sm:space-y-24 pb-12 transition-colors duration-300">
-      
+
       {/* HERO SECTION */}
       <section className="relative min-h-[90vh] flex items-center pt-24 pb-16 overflow-hidden">
-        
-        {/* Background Image with Dynamic Light/Dark Gradient Overlays */}
+
+        {/* Background Image with Brighter Visibility */}
         <div className="absolute inset-0 z-0">
           <img
-            src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=2000&q=80"
-            alt="Luxury Car Rental Ghana"
-            className="w-full h-full object-cover object-center opacity-40 dark:opacity-30 scale-105"
+            src="https://benjirentalservices.com/assets/images/s1.jpg"
+            alt="Legacy Vehicle Hub Ghana Luxury Rental"
+            className="w-full h-full object-cover object-center opacity-85 brightness-105 scale-105"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-slate-100 via-slate-100/80 to-slate-100/40 dark:from-dark-900 dark:via-dark-900/80 dark:to-dark-900/40 transition-colors duration-300" />
-          <div className="absolute inset-0 bg-gradient-to-r from-slate-100 via-slate-100/90 to-transparent dark:from-dark-900 dark:via-dark-900/90 dark:to-transparent transition-colors duration-300" />
+          {/* Softened Overlays for Vibrant Image Visibility & Crisp Text Contrast */}
+          <div className="absolute inset-0 bg-gradient-to-t from-dark-900 via-dark-900/50 to-dark-900/20" />
+          <div className="absolute inset-0 bg-gradient-to-r from-dark-900/80 via-dark-900/40 to-transparent" />
         </div>
 
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
           <div className="max-w-3xl space-y-6">
-            
+
             {/* Pill Tag */}
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-brand-500/10 border border-brand-500/30 text-brand-600 dark:text-brand-400 text-xs font-semibold uppercase tracking-wider backdrop-blur-md">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-dark-900/80 border border-brand-500/40 text-brand-400 text-xs font-semibold uppercase tracking-wider backdrop-blur-md shadow-lg">
               <Sparkles className="w-3.5 h-3.5" />
               <span>Ghana's Premier Chauffeur & Self-Drive Fleet</span>
             </div>
 
             {/* Main Headline */}
-            <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black text-slate-900 dark:text-white tracking-tight leading-[1.1]">
-              Drive Ghana in <span className="bg-gradient-to-r from-brand-600 via-amber-600 to-brand-500 dark:from-brand-300 dark:via-brand-500 dark:to-amber-600 bg-clip-text text-transparent">Absolute Comfort & Luxury</span>
+            <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black text-white tracking-tight leading-[1.1] drop-shadow-md">
+              Drive Ghana in <span className="bg-gradient-to-r from-brand-300 via-brand-500 to-amber-500 bg-clip-text text-transparent">Absolute Comfort & Luxury</span>
             </h1>
 
             {/* Sub-headline */}
-            <p className="text-base sm:text-lg text-slate-700 dark:text-slate-300 leading-relaxed font-normal">
+            <p className="text-base sm:text-lg text-slate-200 leading-relaxed font-semibold drop-shadow">
               From business trips in Accra to regional journeys across Kumasi, Takoradi, and Cape Coast. Enjoy fully-maintained SUVs, executive sedans, and group shuttles with transparent rates and zero hidden charges.
             </p>
 
             {/* Quick Benefits */}
-            <div className="flex flex-wrap items-center gap-4 text-xs font-medium text-slate-700 dark:text-slate-300 pt-2">
-              <div className="flex items-center gap-1.5">
-                <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+            <div className="flex flex-wrap items-center gap-4 text-xs font-bold text-slate-100 pt-2 drop-shadow">
+              <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-dark-900/70 border border-white/10 backdrop-blur-sm">
+                <CheckCircle2 className="w-4 h-4 text-emerald-400" />
                 <span>Kotoka Airport Drop & Pickups</span>
               </div>
-              <div className="flex items-center gap-1.5">
-                <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+              <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-dark-900/70 border border-white/10 backdrop-blur-sm">
+                <CheckCircle2 className="w-4 h-4 text-emerald-400" />
                 <span>Verified Chauffeur Options</span>
               </div>
-              <div className="flex items-center gap-1.5">
-                <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+              <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-dark-900/70 border border-white/10 backdrop-blur-sm">
+                <CheckCircle2 className="w-4 h-4 text-emerald-400" />
                 <span>Flexible Daily Rates</span>
               </div>
             </div>
@@ -85,7 +88,7 @@ export default function Home() {
             <div className="pt-4">
               <form onSubmit={handleQuickSearch} className="glass-card p-4 sm:p-5 rounded-3xl border border-slate-200 dark:border-white/10 shadow-xl dark:shadow-2xl space-y-4">
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                  
+
                   {/* Category Filter */}
                   <div>
                     <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 block mb-1">Vehicle Category</label>
@@ -163,7 +166,7 @@ export default function Home() {
 
       {/* FEATURED FLEET GRID */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
-        
+
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
           <div>
             <div className="inline-flex items-center gap-1.5 text-brand-600 dark:text-brand-400 text-xs font-bold uppercase tracking-wider">
@@ -214,7 +217,7 @@ export default function Home() {
             to="/cars"
             className="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl bg-white hover:bg-slate-100 dark:bg-dark-800 dark:hover:bg-dark-700 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white font-bold text-sm transition-all hover:scale-105 shadow-md dark:shadow-xl"
           >
-            <span>View All Fleet Catalog ({CARS_DATA.length} Cars)</span>
+            <span>View All Fleet Catalog ({cars.length} Cars)</span>
             <ArrowRight className="w-4 h-4 text-brand-600 dark:text-brand-400" />
           </Link>
         </div>
@@ -224,7 +227,7 @@ export default function Home() {
       {/* SERVICE OFFERINGS */}
       <section className="bg-slate-200/60 dark:bg-gradient-to-b dark:from-dark-900 dark:via-dark-800 dark:to-dark-900 py-16 border-y border-slate-300 dark:border-white/5 transition-colors duration-300">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
-          
+
           <div className="text-center max-w-2xl mx-auto space-y-3">
             <span className="text-xs font-bold text-brand-600 dark:text-brand-400 uppercase tracking-widest">Tailored Mobility Solutions</span>
             <h2 className="text-3xl sm:text-4xl font-black text-slate-900 dark:text-white">Services We Offer Across Ghana</h2>
@@ -234,7 +237,7 @@ export default function Home() {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            
+
             {/* Service 1 */}
             <div className="glass-card p-6 rounded-2xl border border-slate-200 dark:border-white/10 hover:border-brand-500/40 transition-all space-y-4">
               <div className="w-12 h-12 rounded-xl bg-brand-500/20 text-brand-600 dark:text-brand-400 flex items-center justify-center border border-brand-500/30">
@@ -286,9 +289,9 @@ export default function Home() {
 
       {/* WHY CHOOSE US */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
-        
+
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          
+
           <div className="space-y-6">
             <span className="text-xs font-bold text-brand-600 dark:text-brand-400 uppercase tracking-widest">Why Legacy Vehicle Hub?</span>
             <h2 className="text-3xl sm:text-4xl font-black text-slate-900 dark:text-white leading-tight">
@@ -339,7 +342,7 @@ export default function Home() {
               className="w-full h-full object-cover"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent dark:from-dark-900 opacity-90" />
-            
+
             <div className="absolute bottom-6 left-6 right-6 p-6 rounded-2xl glass-card border border-white/20 space-y-3">
               <div className="flex items-center justify-between text-slate-900 dark:text-white">
                 <div>
@@ -368,7 +371,7 @@ export default function Home() {
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="relative rounded-3xl overflow-hidden bg-gradient-to-r from-brand-600 via-amber-600 to-brand-700 p-8 sm:p-12 text-slate-950 shadow-2xl">
           <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6">
-            
+
             <div className="space-y-2 text-center md:text-left">
               <h2 className="text-2xl sm:text-4xl font-black text-slate-950">
                 Ready to Reserve Your Car in Ghana?
