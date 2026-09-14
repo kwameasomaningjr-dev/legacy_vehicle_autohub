@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { X, Mail, Send, CheckCircle2, AlertCircle, Calendar, MapPin, User, Phone, Car, Sparkles } from 'lucide-react';
+import React, { useState } from 'react';
+import { X, Mail, Sparkles, Send, CheckCircle2, AlertCircle, Phone, Calendar, User, FileText } from 'lucide-react';
 import { CARS_DATA } from '../data/cars';
+import { DEFAULT_PHONE_DISPLAY } from '../utils/whatsapp';
 
-export default function EmailBookingModal({ car = null, onClose, defaultScope = "Inside Accra" }) {
+export default function EmailBookingModal({ car, defaultScope = "Inside Accra", onClose }) {
   const [selectedCarId, setSelectedCarId] = useState(car ? car.id : CARS_DATA[0].id);
   const [travelScope, setTravelScope] = useState(defaultScope);
+  
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
@@ -12,26 +14,20 @@ export default function EmailBookingModal({ car = null, onClose, defaultScope = 
     pickupDate: '',
     returnDate: '',
     notes: '',
-    accessKey: import.meta.env.VITE_WEB3FORMS_ACCESS_KEY || 'YOUR_WEB3FORMS_ACCESS_KEY' // Web3Forms Access Key
+    accessKey: import.meta.env.VITE_WEB3FORMS_ACCESS_KEY || '',
   });
 
-  const [status, setStatus] = useState('idle'); // idle | submitting | success | error
+  const [status, setStatus] = useState('idle'); // 'idle' | 'submitting' | 'success' | 'error'
   const [responseMsg, setResponseMsg] = useState('');
 
-  // Lock background scrolling
-  useEffect(() => {
-    document.body.style.overflow = 'hidden';
-    return () => {
-      document.body.style.overflow = 'unset';
-    };
-  }, []);
-
   const selectedCarObj = CARS_DATA.find(c => c.id === selectedCarId) || CARS_DATA[0];
-  const estimatedRate = travelScope === "Outside Accra" ? selectedCarObj.rateOutsideAccra : selectedCarObj.rateInsideAccra;
+  const estimatedRate = travelScope === 'Outside Accra' ? selectedCarObj.rateOutsideAccra : selectedCarObj.rateInsideAccra;
 
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData(prev => ({
+      ...prev,
+      [e.target.name]: e.target.value
+    }));
   };
 
   const handleSubmit = async (e) => {
@@ -39,88 +35,78 @@ export default function EmailBookingModal({ car = null, onClose, defaultScope = 
     setStatus('submitting');
     setResponseMsg('');
 
+    const keyToUse = formData.accessKey || 'YOUR_ACCESS_KEY_HERE';
+
     try {
-      // Prepare payload for Web3Forms API
-      const web3FormsPayload = {
-        access_key: formData.accessKey,
-        subject: `New Rental Request: ${selectedCarObj.name} (${travelScope}) - ${formData.fullName}`,
-        from_name: "Legacy Vehicle Hub Booking System",
+      const payload = {
+        access_key: keyToUse,
+        subject: `New Vehicle Booking Request: ${selectedCarObj.name} (${travelScope})`,
+        from_name: "Legacy Vehicle Hub Website",
         to_email: "info@legacyvehiclehubgh.com",
-        "Vehicle Name": selectedCarObj.name,
-        "Vehicle Category": selectedCarObj.category,
-        "Travel Scope": travelScope,
-        "Estimated Daily Rate": `GH₵ ${estimatedRate.toLocaleString()}`,
-        "Customer Name": formData.fullName,
-        "Customer Email": formData.email,
-        "Customer Phone": formData.phone,
-        "Pickup Date": formData.pickupDate || 'Not specified',
-        "Return Date": formData.returnDate || 'Not specified',
-        "Special Notes": formData.notes || 'None'
+        user_name: formData.fullName,
+        user_email: formData.email,
+        user_phone: formData.phone,
+        vehicle: selectedCarObj.name,
+        category: selectedCarObj.category,
+        travel_scope: travelScope,
+        daily_rate_ghc: estimatedRate,
+        pickup_date: formData.pickupDate || 'Not specified',
+        return_date: formData.returnDate || 'Not specified',
+        special_notes: formData.notes || 'None',
       };
 
-      // Check if placeholder access key is used
-      if (formData.accessKey === 'YOUR_WEB3FORMS_ACCESS_KEY') {
-        // Simulated success for demo when Web3Forms key is not yet configured
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        setStatus('success');
-        setResponseMsg('Demo Mode: Email booking payload compiled successfully! (To receive actual emails, replace YOUR_WEB3FORMS_ACCESS_KEY in the config with your key from web3forms.com).');
-        return;
-      }
-
-      // Real Submission to Web3Forms API endpoint
-      const res = await fetch('https://api.web3forms.com/submit', {
+      const response = await fetch('https://api.web3forms.com/submit', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json'
         },
-        body: JSON.stringify(web3FormsPayload)
+        body: JSON.stringify(payload)
       });
 
-      const data = await res.json();
+      const data = await response.json();
 
       if (data.success) {
         setStatus('success');
-        setResponseMsg('Your booking request has been sent via email! Our dispatch team will reply shortly.');
+        setResponseMsg('Your booking request was dispatched successfully! Our team will contact you shortly.');
       } else {
         setStatus('error');
-        setResponseMsg(data.message || 'Submission error occurred. Please try again or use WhatsApp.');
+        setResponseMsg(data.message || 'Failed to submit email booking. Please try again or use WhatsApp.');
       }
     } catch (err) {
-      console.error('Web3Forms email submission error:', err);
-      // Fallback demo success
-      setStatus('success');
-      setResponseMsg('Booking inquiry formatted for Web3Forms email dispatch! (Web3Forms API endpoint ready for your key).');
+      console.error("Web3Forms Submission error:", err);
+      setStatus('error');
+      setResponseMsg('Network connection error. Please verify internet connection or try WhatsApp.');
     }
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 overflow-y-auto bg-dark-900/85 backdrop-blur-md animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 overflow-y-auto bg-slate-900/60 dark:bg-dark-900/85 backdrop-blur-md animate-in fade-in duration-200">
       
       {/* Backdrop overlay */}
       <div className="fixed inset-0" onClick={onClose} />
 
       {/* Modal Box */}
-      <div className="relative w-full max-w-2xl bg-dark-800 border border-white/10 rounded-3xl shadow-2xl overflow-hidden z-10 my-8 text-slate-100 flex flex-col max-h-[90vh]">
+      <div className="relative w-full max-w-2xl bg-white dark:bg-dark-800 border border-slate-200 dark:border-white/10 rounded-3xl shadow-2xl overflow-hidden z-10 my-8 text-slate-900 dark:text-slate-100 flex flex-col max-h-[90vh] transition-colors duration-300">
         
         {/* Header */}
-        <div className="flex items-center justify-between p-5 border-b border-white/10 bg-dark-900/70">
+        <div className="flex items-center justify-between p-5 border-b border-slate-200 dark:border-white/10 bg-slate-100 dark:bg-dark-900/70">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-brand-500/20 text-brand-400 flex items-center justify-center border border-brand-500/30">
+            <div className="w-10 h-10 rounded-xl bg-brand-500/20 text-brand-600 dark:text-brand-400 flex items-center justify-center border border-brand-500/30">
               <Mail className="w-5 h-5" />
             </div>
             <div>
-              <div className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-400 uppercase tracking-widest">
+              <div className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-widest">
                 <Sparkles className="w-3 h-3" />
                 <span>Web3Forms Email Booking</span>
               </div>
-              <h2 className="text-lg sm:text-xl font-black text-white">Email Car Reservation</h2>
+              <h2 className="text-lg sm:text-xl font-black text-slate-900 dark:text-white">Email Car Reservation</h2>
             </div>
           </div>
 
           <button
             onClick={onClose}
-            className="p-2 rounded-full bg-dark-700 hover:bg-dark-600 text-slate-300 hover:text-white transition-colors border border-white/10"
+            className="p-2 rounded-full bg-slate-200 hover:bg-slate-300 dark:bg-dark-700 dark:hover:bg-dark-600 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-colors border border-slate-300 dark:border-white/10"
             aria-label="Close modal"
           >
             <X className="w-5 h-5" />
@@ -131,38 +117,38 @@ export default function EmailBookingModal({ car = null, onClose, defaultScope = 
         <div className="p-5 sm:p-6 overflow-y-auto space-y-5 flex-1 custom-scrollbar">
           
           {status === 'success' ? (
-            <div className="bg-gradient-to-br from-emerald-950/80 to-dark-900 p-6 rounded-2xl border border-emerald-500/40 text-center space-y-4 animate-in zoom-in-95">
-              <div className="w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center mx-auto border border-emerald-500/30">
+            <div className="bg-emerald-50 dark:bg-gradient-to-br dark:from-emerald-950/80 dark:to-dark-900 p-6 rounded-2xl border border-emerald-500/40 text-center space-y-4 animate-in zoom-in-95">
+              <div className="w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 flex items-center justify-center mx-auto border border-emerald-500/30">
                 <CheckCircle2 className="w-7 h-7" />
               </div>
-              <h3 className="text-lg font-extrabold text-white">Email Booking Request Submitted!</h3>
-              <p className="text-xs text-slate-300 leading-relaxed">
+              <h3 className="text-lg font-extrabold text-slate-900 dark:text-white">Email Booking Request Submitted!</h3>
+              <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
                 {responseMsg}
               </p>
 
               {/* Summary of sent details */}
-              <div className="bg-dark-900/90 p-4 rounded-xl text-left text-xs space-y-2 border border-white/5 text-slate-300">
+              <div className="bg-white dark:bg-dark-900/90 p-4 rounded-xl text-left text-xs space-y-2 border border-slate-200 dark:border-white/5 text-slate-700 dark:text-slate-300 shadow-sm">
                 <div className="flex justify-between">
-                  <span className="text-slate-400">Reserved Vehicle:</span>
-                  <span className="font-bold text-white">{selectedCarObj.name}</span>
+                  <span className="text-slate-500 dark:text-slate-400">Reserved Vehicle:</span>
+                  <span className="font-bold text-slate-900 dark:text-white">{selectedCarObj.name}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-slate-400">Travel Scope:</span>
-                  <span className="font-bold text-brand-400">{travelScope}</span>
+                  <span className="text-slate-500 dark:text-slate-400">Travel Scope:</span>
+                  <span className="font-bold text-brand-600 dark:text-brand-400">{travelScope}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-slate-400">Rate Estimate:</span>
-                  <span className="font-bold text-white">GH₵ {estimatedRate.toLocaleString()} / day</span>
+                  <span className="text-slate-500 dark:text-slate-400">Rate Estimate:</span>
+                  <span className="font-bold text-slate-900 dark:text-white">GH₵ {estimatedRate.toLocaleString()} / day</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-slate-400">Recipient Email:</span>
-                  <span className="font-medium text-emerald-400">{formData.email || 'Provided Email'}</span>
+                  <span className="text-slate-500 dark:text-slate-400">Recipient Email:</span>
+                  <span className="font-medium text-emerald-600 dark:text-emerald-400">{formData.email || 'Provided Email'}</span>
                 </div>
               </div>
 
               <button
                 onClick={() => setStatus('idle')}
-                className="px-6 py-2.5 rounded-xl bg-dark-700 text-slate-200 text-xs font-semibold hover:bg-dark-600 border border-white/10"
+                className="px-6 py-2.5 rounded-xl bg-slate-200 hover:bg-slate-300 dark:bg-dark-700 text-slate-800 dark:text-slate-200 text-xs font-semibold dark:hover:bg-dark-600 border border-slate-300 dark:border-white/10"
               >
                 Send Another Request
               </button>
@@ -171,12 +157,12 @@ export default function EmailBookingModal({ car = null, onClose, defaultScope = 
             <form onSubmit={handleSubmit} className="space-y-4 text-xs">
               
               {/* Web3Forms Access Key Configuration Notice */}
-              <div className="bg-dark-900/80 p-3.5 rounded-xl border border-slate-700/80 flex items-start gap-3">
-                <Mail className="w-4 h-4 text-brand-400 shrink-0 mt-0.5" />
-                <div className="space-y-1 text-[11px] text-slate-300">
-                  <span className="font-bold text-white block">Web3Forms Configuration</span>
-                  <p className="text-slate-400">
-                    Form ready for Web3Forms API. You can update your access key below or in environment variable <code className="text-brand-400 bg-dark-900 px-1 py-0.5 rounded">VITE_WEB3FORMS_ACCESS_KEY</code>.
+              <div className="bg-slate-100 dark:bg-dark-900/80 p-3.5 rounded-xl border border-slate-300 dark:border-slate-700/80 flex items-start gap-3">
+                <Mail className="w-4 h-4 text-brand-600 dark:text-brand-400 shrink-0 mt-0.5" />
+                <div className="space-y-1 text-[11px] text-slate-700 dark:text-slate-300">
+                  <span className="font-bold text-slate-900 dark:text-white block">Web3Forms Configuration</span>
+                  <p className="text-slate-500 dark:text-slate-400">
+                    Form ready for Web3Forms API. You can update your access key below or in environment variable <code className="text-brand-600 dark:text-brand-400 bg-slate-200 dark:bg-dark-900 px-1 py-0.5 rounded">VITE_WEB3FORMS_ACCESS_KEY</code>.
                   </p>
                   <input
                     type="text"
@@ -184,7 +170,7 @@ export default function EmailBookingModal({ car = null, onClose, defaultScope = 
                     placeholder="Web3Forms Access Key (e.g. 5a1b2c3d-4e5f-...)"
                     value={formData.accessKey}
                     onChange={handleInputChange}
-                    className="w-full bg-dark-800 border border-slate-700 rounded-lg px-2.5 py-1 text-[11px] text-slate-200 focus:outline-none focus:border-brand-500 font-mono mt-1"
+                    className="w-full bg-white dark:bg-dark-800 border border-slate-300 dark:border-slate-700 rounded-lg px-2.5 py-1 text-[11px] text-slate-900 dark:text-slate-200 focus:outline-none focus:border-brand-500 font-mono mt-1"
                   />
                 </div>
               </div>
@@ -192,11 +178,11 @@ export default function EmailBookingModal({ car = null, onClose, defaultScope = 
               {/* Vehicle Selection & Travel Scope */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="text-slate-300 font-semibold block mb-1">Select Vehicle</label>
+                  <label className="text-slate-700 dark:text-slate-300 font-semibold block mb-1">Select Vehicle</label>
                   <select
                     value={selectedCarId}
                     onChange={(e) => setSelectedCarId(e.target.value)}
-                    className="w-full bg-dark-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-brand-500"
+                    className="w-full bg-white dark:bg-dark-900 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-brand-500"
                   >
                     {CARS_DATA.map(c => (
                       <option key={c.id} value={c.id}>
@@ -207,13 +193,13 @@ export default function EmailBookingModal({ car = null, onClose, defaultScope = 
                 </div>
 
                 <div>
-                  <label className="text-slate-300 font-semibold block mb-1">Travel Scope</label>
-                  <div className="grid grid-cols-2 bg-dark-900 p-1 rounded-xl border border-slate-700">
+                  <label className="text-slate-700 dark:text-slate-300 font-semibold block mb-1">Travel Scope</label>
+                  <div className="grid grid-cols-2 bg-slate-100 dark:bg-dark-900 p-1 rounded-xl border border-slate-300 dark:border-slate-700">
                     <button
                       type="button"
                       onClick={() => setTravelScope('Inside Accra')}
                       className={`py-1 font-bold rounded-lg text-xs transition-all ${
-                        travelScope === 'Inside Accra' ? 'bg-brand-500 text-dark-900' : 'text-slate-400'
+                        travelScope === 'Inside Accra' ? 'bg-brand-500 text-slate-950 shadow-sm' : 'text-slate-600 dark:text-slate-400'
                       }`}
                     >
                       Inside Accra
@@ -222,7 +208,7 @@ export default function EmailBookingModal({ car = null, onClose, defaultScope = 
                       type="button"
                       onClick={() => setTravelScope('Outside Accra')}
                       className={`py-1 font-bold rounded-lg text-xs transition-all ${
-                        travelScope === 'Outside Accra' ? 'bg-brand-500 text-dark-900' : 'text-slate-400'
+                        travelScope === 'Outside Accra' ? 'bg-brand-500 text-slate-950 shadow-sm' : 'text-slate-600 dark:text-slate-400'
                       }`}
                     >
                       Outside Accra
@@ -234,7 +220,7 @@ export default function EmailBookingModal({ car = null, onClose, defaultScope = 
               {/* Full Name & Email */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="text-slate-300 font-semibold block mb-1">Full Name *</label>
+                  <label className="text-slate-700 dark:text-slate-300 font-semibold block mb-1">Full Name *</label>
                   <input
                     type="text"
                     name="fullName"
@@ -242,12 +228,12 @@ export default function EmailBookingModal({ car = null, onClose, defaultScope = 
                     placeholder="e.g. Ama Serwaa"
                     value={formData.fullName}
                     onChange={handleInputChange}
-                    className="w-full bg-dark-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-brand-500"
+                    className="w-full bg-white dark:bg-dark-900 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-brand-500"
                   />
                 </div>
 
                 <div>
-                  <label className="text-slate-300 font-semibold block mb-1">Email Address *</label>
+                  <label className="text-slate-700 dark:text-slate-300 font-semibold block mb-1">Email Address *</label>
                   <input
                     type="email"
                     name="email"
@@ -255,7 +241,7 @@ export default function EmailBookingModal({ car = null, onClose, defaultScope = 
                     placeholder="e.g. client@example.com"
                     value={formData.email}
                     onChange={handleInputChange}
-                    className="w-full bg-dark-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-brand-500"
+                    className="w-full bg-white dark:bg-dark-900 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-brand-500"
                   />
                 </div>
               </div>
@@ -263,7 +249,7 @@ export default function EmailBookingModal({ car = null, onClose, defaultScope = 
               {/* Phone & Pickup/Return Dates */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <div>
-                  <label className="text-slate-300 font-semibold block mb-1">Phone / WhatsApp *</label>
+                  <label className="text-slate-700 dark:text-slate-300 font-semibold block mb-1">Phone / WhatsApp *</label>
                   <input
                     type="tel"
                     name="phone"
@@ -271,60 +257,60 @@ export default function EmailBookingModal({ car = null, onClose, defaultScope = 
                     placeholder="+233 24 000 0000"
                     value={formData.phone}
                     onChange={handleInputChange}
-                    className="w-full bg-dark-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-brand-500"
+                    className="w-full bg-white dark:bg-dark-900 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-brand-500"
                   />
                 </div>
 
                 <div>
-                  <label className="text-slate-300 font-semibold block mb-1">Pickup Date</label>
+                  <label className="text-slate-700 dark:text-slate-300 font-semibold block mb-1">Pickup Date</label>
                   <input
                     type="date"
                     name="pickupDate"
                     value={formData.pickupDate}
                     onChange={handleInputChange}
-                    className="w-full bg-dark-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-brand-500"
+                    className="w-full bg-white dark:bg-dark-900 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-brand-500"
                   />
                 </div>
 
                 <div>
-                  <label className="text-slate-300 font-semibold block mb-1">Return Date</label>
+                  <label className="text-slate-700 dark:text-slate-300 font-semibold block mb-1">Return Date</label>
                   <input
                     type="date"
                     name="returnDate"
                     value={formData.returnDate}
                     onChange={handleInputChange}
-                    className="w-full bg-dark-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-brand-500"
+                    className="w-full bg-white dark:bg-dark-900 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-brand-500"
                   />
                 </div>
               </div>
 
               {/* Summary Rate Calculation */}
-              <div className="bg-dark-900 p-3 rounded-xl border border-white/5 flex items-center justify-between">
+              <div className="bg-slate-100 dark:bg-dark-900 p-3 rounded-xl border border-slate-200 dark:border-white/5 flex items-center justify-between">
                 <div>
-                  <span className="text-[11px] text-slate-400 block font-medium">Target Vehicle: <strong className="text-white">{selectedCarObj.name}</strong></span>
-                  <span className="text-xs text-brand-400 font-bold">Scope: {travelScope}</span>
+                  <span className="text-[11px] text-slate-500 dark:text-slate-400 block font-medium">Target Vehicle: <strong className="text-slate-900 dark:text-white">{selectedCarObj.name}</strong></span>
+                  <span className="text-xs text-brand-600 dark:text-brand-400 font-bold">Scope: {travelScope}</span>
                 </div>
                 <div className="text-right">
-                  <span className="text-[10px] text-slate-400 block uppercase">Est. Rate</span>
-                  <span className="text-base font-extrabold text-white">GH₵ {estimatedRate.toLocaleString()} / day</span>
+                  <span className="text-[10px] text-slate-500 dark:text-slate-400 block uppercase">Est. Rate</span>
+                  <span className="text-base font-extrabold text-slate-900 dark:text-white">GH₵ {estimatedRate.toLocaleString()} / day</span>
                 </div>
               </div>
 
               {/* Special Instructions / Notes */}
               <div>
-                <label className="text-slate-300 font-semibold block mb-1">Special Notes / Requirements</label>
+                <label className="text-slate-700 dark:text-slate-300 font-semibold block mb-1">Special Notes / Requirements</label>
                 <textarea
                   name="notes"
                   rows="2"
                   placeholder="e.g. Flight arrival details or preferred driver instructions..."
                   value={formData.notes}
                   onChange={handleInputChange}
-                  className="w-full bg-dark-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-brand-500"
+                  className="w-full bg-white dark:bg-dark-900 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-brand-500"
                 />
               </div>
 
               {status === 'error' && (
-                <div className="p-3 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 text-xs flex items-center gap-2">
+                <div className="p-3 rounded-xl bg-red-500/10 border border-red-500/30 text-red-600 dark:text-red-400 text-xs flex items-center gap-2">
                   <AlertCircle className="w-4 h-4 shrink-0" />
                   <span>{responseMsg}</span>
                 </div>
@@ -333,7 +319,7 @@ export default function EmailBookingModal({ car = null, onClose, defaultScope = 
               <button
                 type="submit"
                 disabled={status === 'submitting'}
-                className="w-full py-3.5 rounded-xl bg-gradient-to-r from-brand-500 to-amber-600 hover:from-brand-400 hover:to-amber-500 text-dark-900 font-extrabold text-sm flex items-center justify-center gap-2 shadow-lg shadow-brand-500/20 transition-all active:scale-95 disabled:opacity-50"
+                className="w-full py-3.5 rounded-xl bg-gradient-to-r from-brand-500 to-amber-600 hover:from-brand-400 hover:to-amber-500 text-slate-950 font-extrabold text-sm flex items-center justify-center gap-2 shadow-lg shadow-brand-500/20 transition-all active:scale-95 disabled:opacity-50"
               >
                 <Send className="w-4 h-4" />
                 <span>{status === 'submitting' ? 'Sending Request via Email...' : 'Submit Email Booking Request'}</span>

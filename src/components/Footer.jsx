@@ -5,7 +5,7 @@ import { DEFAULT_PHONE_DISPLAY, SECONDARY_PHONE_DISPLAY, DEFAULT_WHATSAPP_NUMBER
 
 export default function Footer() {
   return (
-    <footer className="bg-dark-900 border-t border-slate-800 text-slate-400 pt-16 pb-8">
+    <footer className="bg-slate-900 dark:bg-dark-900 border-t border-slate-800 dark:border-slate-800/80 text-slate-400 pt-16 pb-8 transition-colors duration-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Top Footer Grid */}
@@ -40,31 +40,31 @@ export default function Footer() {
             <h3 className="text-white text-base font-bold tracking-wide uppercase">Quick Links</h3>
             <ul className="space-y-2.5 text-sm">
               <li>
-                <Link to="/" className="hover:text-brand-500 transition-colors flex items-center gap-2">
+                <Link to="/" className="hover:text-brand-400 transition-colors flex items-center gap-2">
                   <ArrowRight className="w-3.5 h-3.5 text-brand-500" />
                   <span>Home</span>
                 </Link>
               </li>
               <li>
-                <Link to="/cars" className="hover:text-brand-500 transition-colors flex items-center gap-2">
+                <Link to="/cars" className="hover:text-brand-400 transition-colors flex items-center gap-2">
                   <ArrowRight className="w-3.5 h-3.5 text-brand-500" />
                   <span>Explore Our Fleet</span>
                 </Link>
               </li>
               <li>
-                <Link to="/about" className="hover:text-brand-500 transition-colors flex items-center gap-2">
+                <Link to="/about" className="hover:text-brand-400 transition-colors flex items-center gap-2">
                   <ArrowRight className="w-3.5 h-3.5 text-brand-500" />
                   <span>About Legacy Vehicle Hub</span>
                 </Link>
               </li>
               <li>
-                <Link to="/terms" className="hover:text-brand-500 transition-colors flex items-center gap-2">
+                <Link to="/terms" className="hover:text-brand-400 transition-colors flex items-center gap-2">
                   <ArrowRight className="w-3.5 h-3.5 text-brand-500" />
                   <span>Terms of Use & Policies</span>
                 </Link>
               </li>
               <li>
-                <Link to="/contact" className="hover:text-brand-500 transition-colors flex items-center gap-2">
+                <Link to="/contact" className="hover:text-brand-400 transition-colors flex items-center gap-2">
                   <ArrowRight className="w-3.5 h-3.5 text-brand-500" />
                   <span>Bookings & Contact</span>
                 </Link>
