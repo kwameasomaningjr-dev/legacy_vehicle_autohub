@@ -81,7 +81,7 @@ export default function Footer() {
             <ul className="space-y-2 text-sm">
               <li className="flex items-start gap-2">
                 <CheckCircle className="w-4 h-4 text-brand-500 mt-0.5 shrink-0" />
-                <span><strong className="text-slate-200">Inside Accra:</strong> Greater Accra Metro, KIA Airport, Tema, Spintex, East Legon.</span>
+                <span><strong className="text-slate-200">Inside Accra:</strong> Greater Accra Metro, Tema, Spintex, East Legon, Cantonments.</span>
               </li>
               <li className="flex items-start gap-2">
                 <CheckCircle className="w-4 h-4 text-brand-500 mt-0.5 shrink-0" />

@@ -25,7 +25,7 @@ export const CARS_DATA = [
       "https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&w=1200&q=80",
       "https://images.unsplash.com/photo-1563720223185-11003d516935?auto=format&fit=crop&w=1200&q=80"
     ],
-    description: "The ultimate luxury full-size SUV for comfortable long-distance travels, VIP airport pickups, and executive transport across Greater Accra and inter-city routes in Ghana."
+    description: "The ultimate luxury full-size SUV for comfortable long-distance travels, corporate delegations, and executive transport across Greater Accra and inter-city routes in Ghana."
   },
   {
     id: "car-2",

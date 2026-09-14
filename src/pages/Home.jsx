@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Car, Search, ShieldCheck, UserCheck, Clock, MapPin, Sparkles, Phone, MessageSquare, ArrowRight, Award, Compass, KeyRound, Plane, CheckCircle2 } from 'lucide-react';
+import { Car, Search, ShieldCheck, UserCheck, Clock, MapPin, Sparkles, Phone, MessageSquare, ArrowRight, Award, Compass, KeyRound, Briefcase, CheckCircle2 } from 'lucide-react';
 import { CATEGORIES, TRANSMISSIONS } from '../data/cars';
 import { useCars } from '../context/CarContext';
 import CarCard from '../components/CarCard';
@@ -72,7 +72,7 @@ export default function Home() {
             <div className="flex flex-wrap items-center gap-4 text-xs font-bold text-slate-100 pt-2 drop-shadow">
               <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-dark-900/70 border border-white/10 backdrop-blur-sm">
                 <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                <span>Kotoka Airport Drop & Pickups</span>
+                <span>Flexible Daily & Weekly Terms</span>
               </div>
               <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-dark-900/70 border border-white/10 backdrop-blur-sm">
                 <CheckCircle2 className="w-4 h-4 text-emerald-400" />
@@ -124,18 +124,16 @@ export default function Home() {
                       <button
                         type="button"
                         onClick={() => setScope("Inside Accra")}
-                        className={`py-1.5 text-xs font-semibold rounded-lg transition-all ${
-                          scope === "Inside Accra" ? 'bg-brand-500 text-slate-950 shadow' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-                        }`}
+                        className={`py-1.5 text-xs font-semibold rounded-lg transition-all ${scope === "Inside Accra" ? 'bg-brand-500 text-slate-950 shadow' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                          }`}
                       >
                         Inside Accra
                       </button>
                       <button
                         type="button"
                         onClick={() => setScope("Outside Accra")}
-                        className={`py-1.5 text-xs font-semibold rounded-lg transition-all ${
-                          scope === "Outside Accra" ? 'bg-brand-500 text-slate-950 shadow' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-                        }`}
+                        className={`py-1.5 text-xs font-semibold rounded-lg transition-all ${scope === "Outside Accra" ? 'bg-brand-500 text-slate-950 shadow' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                          }`}
                       >
                         Outside Accra
                       </button>
@@ -182,17 +180,15 @@ export default function Home() {
             <div className="bg-white dark:bg-dark-800 p-1 rounded-xl border border-slate-300 dark:border-white/10 flex items-center gap-1 shadow-sm">
               <button
                 onClick={() => setScope("Inside Accra")}
-                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
-                  scope === "Inside Accra" ? 'bg-brand-500 text-slate-950 shadow' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-                }`}
+                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${scope === "Inside Accra" ? 'bg-brand-500 text-slate-950 shadow' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                  }`}
               >
                 Inside Accra Rates
               </button>
               <button
                 onClick={() => setScope("Outside Accra")}
-                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
-                  scope === "Outside Accra" ? 'bg-brand-500 text-slate-950 shadow' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-                }`}
+                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${scope === "Outside Accra" ? 'bg-brand-500 text-slate-950 shadow' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                  }`}
               >
                 Outside Accra Rates
               </button>
@@ -263,11 +259,11 @@ export default function Home() {
             {/* Service 3 */}
             <div className="glass-card p-6 rounded-2xl border border-slate-200 dark:border-white/10 hover:border-brand-500/40 transition-all space-y-4">
               <div className="w-12 h-12 rounded-xl bg-brand-500/20 text-brand-600 dark:text-brand-400 flex items-center justify-center border border-brand-500/30">
-                <Plane className="w-6 h-6" />
+                <Briefcase className="w-6 h-6" />
               </div>
-              <h3 className="text-lg font-bold text-slate-900 dark:text-white">KIA Airport VIP Transfers</h3>
+              <h3 className="text-lg font-bold text-slate-900 dark:text-white">Corporate & Event Transport</h3>
               <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-                Seamless airport pickups and drop-offs at Kotoka International Airport (Accra Terminal 3) with flight tracking and luggage handling.
+                Executive fleet dispatch for corporate events, weddings, state summits, and VIP delegation movement across Greater Accra.
               </p>
             </div>
 
