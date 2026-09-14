@@ -58,8 +58,8 @@ export default function About() {
             />
             <div className="absolute inset-0 bg-gradient-to-t from-dark-900 via-transparent to-transparent opacity-80" />
             <div className="absolute bottom-6 left-6 right-6 p-4 rounded-xl glass-card text-xs text-slate-300 border border-white/10">
-              <span className="font-bold text-white block">Accra Head Office Dispatch:</span>
-              <span>Boundary Road, East Legon, Accra. Operating 24 Hours Daily.</span>
+              <span className="font-bold text-white block">Tema Office Dispatch:</span>
+              <span>Redemption Road, Community 9, Tema, Ghana. Operating 24 Hours Daily.</span>
             </div>
           </div>
 
