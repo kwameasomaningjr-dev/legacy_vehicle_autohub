@@ -16,7 +16,7 @@ export default function Terms() {
           </div>
           <h1 className="text-3xl sm:text-5xl font-black text-white">Terms of Use & Rental Agreement</h1>
           <p className="text-sm text-slate-400 max-w-3xl">
-            Please read our standard terms of use governing vehicle rentals, chauffeur services, security deposits, and regional travel clearances across Ghana.
+            Please read our standard terms of use governing vehicle rentals, payments, security deposits, and travel compliance.
           </p>
         </div>
       </div>
@@ -30,86 +30,131 @@ export default function Terms() {
             <span>Legacy Vehicle Hub Rental Summary</span>
           </div>
           <p className="text-xs text-slate-300 leading-relaxed">
-            By reserving or operating any vehicle provided by Legacy Vehicle Hub Ghana, you agree to comply with the terms and conditions outlined below. Our policies are designed to protect both client safety and vehicle integrity.
+            By booking and operating any vehicle from Legacy Vehicle Hub, the renter agrees to comply with the terms and conditions below. These terms protect the company, the vehicle, and all users of the rental agreement.
           </p>
         </div>
 
-        {/* Section 1: Driver Eligibility & Identification */}
+        {/* Section 1: Driver Eligibility */}
         <div className="glass-card p-6 rounded-2xl border border-white/10 space-y-3">
           <h2 className="text-base font-bold text-white flex items-center gap-2">
             <span className="w-6 h-6 rounded-full bg-brand-500/20 text-brand-400 flex items-center justify-center text-xs">1</span>
-            <span>Driver Eligibility & Identification Requirements</span>
+            <span>Driver Eligibility</span>
           </h2>
           <ul className="space-y-2 text-slate-300 list-disc list-inside leading-relaxed pl-2">
-            <li><strong className="text-white">Minimum Age:</strong> Drivers must be at least 21 years of age for standard sedans and 25 years for luxury vehicles or heavy 4x4 SUVs.</li>
-            <li><strong className="text-white">Ghanaian Citizens/Residents:</strong> Must present a valid Ghana Card and a valid Ghanaian Driver’s License (minimum 2 years driving experience).</li>
-            <li><strong className="text-white">International Visitors:</strong> Must present a valid Passport and an International Driving Permit (IDP) or recognized national license.</li>
-            <li><strong className="text-white">Chauffeur Service:</strong> When selecting our Chauffeur option, our assigned certified driver assumes primary responsibility for vehicle operation.</li>
+            <li><strong className="text-white">Driver must be at least 21 years old.</strong></li>
+            <li><strong className="text-white">Must hold a valid driver’s license</strong> with a minimum age of 1–2 years.</li>
+            <li><strong className="text-white">Must provide a valid National ID or Passport.</strong></li>
+            <li><strong className="text-white">International renters must present a valid International Driving Permit (IDP).</strong></li>
+            <li><strong className="text-white">Only authorized drivers listed in the agreement may operate the vehicle.</strong></li>
           </ul>
         </div>
 
-        {/* Section 2: Pricing Tiers & Travel Scope */}
+        {/* Section 2: Booking & Payment */}
         <div className="glass-card p-6 rounded-2xl border border-white/10 space-y-3">
           <h2 className="text-base font-bold text-white flex items-center gap-2">
             <span className="w-6 h-6 rounded-full bg-brand-500/20 text-brand-400 flex items-center justify-center text-xs">2</span>
-            <span>Travel Scope & Dual Pricing Policy</span>
+            <span>Booking & Payment</span>
           </h2>
           <ul className="space-y-2 text-slate-300 list-disc list-inside leading-relaxed pl-2">
-            <li><strong className="text-white">Inside Accra Rate:</strong> Applies strictly to travel within Greater Accra Metro area (KIA Airport, Tema, Spintex, East Legon, Ablekuma, Ga West).</li>
-            <li><strong className="text-white">Outside Accra Rate:</strong> Applies to any journey extending beyond Greater Accra boundaries (e.g., Kumasi, Takoradi, Cape Coast, Volta Region, Tamale).</li>
-            <li><strong className="text-white">Out-of-Town Clearance:</strong> Hirers must declare intent for regional travel prior to vehicle handover to enable out-of-town insurance coverage.</li>
-            <li><strong className="text-white">Driver Overnight Allowance:</strong> For out-of-town chauffeur trips exceeding 24 hours, hirer provides driver accommodation allowance unless pre-arranged.</li>
+            <li><strong className="text-white">Full payment must be made before vehicle release.</strong></li>
+            <li><strong className="text-white">Accepted methods:</strong> Cash, Mobile Money, and Bank Transfer.</li>
+            <li><strong className="text-white">A refundable security deposit is required</strong> and may vary based on vehicle type and rental duration.</li>
+            <li><strong className="text-white">Late returns attract additional hourly or daily charges.</strong></li>
+            <li><strong className="text-white">Failure to return the vehicle without notice may be reported to authorities.</strong></li>
           </ul>
         </div>
 
-        {/* Section 3: Security Deposit & Payment Terms */}
+        {/* Section 3: Rental Period */}
         <div className="glass-card p-6 rounded-2xl border border-white/10 space-y-3">
           <h2 className="text-base font-bold text-white flex items-center gap-2">
             <span className="w-6 h-6 rounded-full bg-brand-500/20 text-brand-400 flex items-center justify-center text-xs">3</span>
-            <span>Security Deposit & Refund Policy</span>
+            <span>Rental Period</span>
           </h2>
           <ul className="space-y-2 text-slate-300 list-disc list-inside leading-relaxed pl-2">
-            <li><strong className="text-white">Deposit Handoff:</strong> A refundable security deposit is required upon key handover (via Mobile Money or Cash/Card transfer).</li>
-            <li><strong className="text-white">Vehicle Inspection:</strong> Joints inspection of bodywork, tires, windshield, and fuel gauge takes place at pickup and drop-off.</li>
-            <li><strong className="text-white">Deposit Refund Timeline:</strong> Security deposits are refunded within 24 to 48 hours following vehicle return and inspection verification.</li>
+            <li><strong className="text-white">Minimum rental period is 24 hours.</strong></li>
+            <li><strong className="text-white">Extra hours are charged accordingly.</strong></li>
+            <li><strong className="text-white">Early return does not qualify for a refund</strong> unless agreed in writing.</li>
+            <li><strong className="text-white">Driving outside Accra requires written approval</strong> and may attract additional fees.</li>
           </ul>
         </div>
 
-        {/* Section 4: Fuel & Maintenance Policy */}
+        {/* Section 4: Use of Vehicle */}
         <div className="glass-card p-6 rounded-2xl border border-white/10 space-y-3">
           <h2 className="text-base font-bold text-white flex items-center gap-2">
             <span className="w-6 h-6 rounded-full bg-brand-500/20 text-brand-400 flex items-center justify-center text-xs">4</span>
-            <span>Fuel & Vehicle Care</span>
+            <span>Use of Vehicle</span>
           </h2>
           <ul className="space-y-2 text-slate-300 list-disc list-inside leading-relaxed pl-2">
-            <li><strong className="text-white">Same-to-Same Fuel Policy:</strong> Vehicles are dispatched with a recorded fuel level and must be returned at the identical level.</li>
-            <li><strong className="text-white">Prohibited Uses:</strong> Vehicles must not be used for illegal activities, unapproved off-road rally racing, towing, or sub-leasing.</li>
-            <li><strong className="text-white">Smoking & Pets:</strong> Smoking inside vehicles is strictly prohibited. Deep cleaning charges apply for violations.</li>
+            <li><strong className="text-white">Vehicle must not be used for illegal activities.</strong></li>
+            <li><strong className="text-white">No driving under the influence of alcohol or drugs.</strong></li>
+            <li><strong className="text-white">No subleasing or unauthorized drivers.</strong></li>
+            <li><strong className="text-white">No racing, towing, or commercial transport</strong> unless agreed.</li>
+            <li><strong className="text-white">Vehicle must not be overloaded beyond capacity.</strong></li>
           </ul>
         </div>
 
-        {/* Section 5: Insurance & Accident Procedures */}
+        {/* Section 5: Insurance & Liability */}
         <div className="glass-card p-6 rounded-2xl border border-white/10 space-y-3">
           <h2 className="text-base font-bold text-white flex items-center gap-2">
             <span className="w-6 h-6 rounded-full bg-brand-500/20 text-brand-400 flex items-center justify-center text-xs">5</span>
-            <span>Insurance Coverage & Roadside Incident Reporting</span>
+            <span>Insurance & Liability</span>
           </h2>
           <ul className="space-y-2 text-slate-300 list-disc list-inside leading-relaxed pl-2">
-            <li><strong className="text-white">Comprehensive Insurance:</strong> All vehicles in our fleet carry comprehensive commercial vehicle insurance.</li>
-            <li><strong className="text-white">Immediate Reporting:</strong> In the event of a mechanical breakdown, collision, or accident, the hirer must immediately contact our 24/7 hotline ({DEFAULT_PHONE_DISPLAY} / {SECONDARY_PHONE_DISPLAY}).</li>
-            <li><strong className="text-white">Police Report:</strong> Accident incidents require a formal Ghana Police Service report prior to insurance claims.</li>
+            <li><strong className="text-white">Vehicles come with basic insurance coverage.</strong></li>
+            <li><strong className="text-white">The renter shall be held responsible for any and all damages</strong> that occur during the rental period.</li>
+            <li><strong className="text-white">Renter is liable for traffic fines and violations.</strong></li>
+            <li><strong className="text-white">In case of accident, renter must inform the company immediately</strong> and obtain a police report.</li>
           </ul>
         </div>
 
-        {/* Section 6: Extensions & Cancellations */}
+        {/* Section 6: Security Deposit */}
         <div className="glass-card p-6 rounded-2xl border border-white/10 space-y-3">
           <h2 className="text-base font-bold text-white flex items-center gap-2">
             <span className="w-6 h-6 rounded-full bg-brand-500/20 text-brand-400 flex items-center justify-center text-xs">6</span>
-            <span>Rental Extension & Cancellation</span>
+            <span>Security Deposit</span>
           </h2>
           <ul className="space-y-2 text-slate-300 list-disc list-inside leading-relaxed pl-2">
-            <li><strong className="text-white">Rental Extension:</strong> Extensions must be requested at least 12 hours prior to scheduled return to verify fleet availability.</li>
-            <li><strong className="text-white">Grace Period:</strong> A 1-hour grace period is granted for returns. Returns exceeding 2 hours incur a half-day rate charge.</li>
+            <li><strong className="text-white">Deposit covers damages, fines, fuel shortages, or contract violations.</strong></li>
+            <li><strong className="text-white">Refund processed within 24–72 hours</strong> after inspection.</li>
+            <li><strong className="text-white">Any deductions will be clearly explained.</strong></li>
+          </ul>
+        </div>
+
+        {/* Section 7: Fuel Policy */}
+        <div className="glass-card p-6 rounded-2xl border border-white/10 space-y-3">
+          <h2 className="text-base font-bold text-white flex items-center gap-2">
+            <span className="w-6 h-6 rounded-full bg-brand-500/20 text-brand-400 flex items-center justify-center text-xs">7</span>
+            <span>Fuel Policy</span>
+          </h2>
+          <ul className="space-y-2 text-slate-300 list-disc list-inside leading-relaxed pl-2">
+            <li><strong className="text-white">Vehicle must be returned with the same fuel level as received.</strong></li>
+            <li><strong className="text-white">Fuel shortages will be charged at current market rates</strong> plus service charge.</li>
+          </ul>
+        </div>
+
+        {/* Section 8: Breakdown & Maintenance */}
+        <div className="glass-card p-6 rounded-2xl border border-white/10 space-y-3">
+          <h2 className="text-base font-bold text-white flex items-center gap-2">
+            <span className="w-6 h-6 rounded-full bg-brand-500/20 text-brand-400 flex items-center justify-center text-xs">8</span>
+            <span>Breakdown & Maintenance</span>
+          </h2>
+          <ul className="space-y-2 text-slate-300 list-disc list-inside leading-relaxed pl-2">
+            <li><strong className="text-white">Company covers mechanical faults</strong> not caused by misuse.</li>
+            <li><strong className="text-white">Renter is responsible for negligence-related damages.</strong></li>
+            <li><strong className="text-white">Unauthorized repairs are not permitted without approval.</strong></li>
+          </ul>
+        </div>
+
+        {/* Section 9: Cancellation Policy */}
+        <div className="glass-card p-6 rounded-2xl border border-white/10 space-y-3">
+          <h2 className="text-base font-bold text-white flex items-center gap-2">
+            <span className="w-6 h-6 rounded-full bg-brand-500/20 text-brand-400 flex items-center justify-center text-xs">9</span>
+            <span>Cancellation Policy</span>
+          </h2>
+          <ul className="space-y-2 text-slate-300 list-disc list-inside leading-relaxed pl-2">
+            <li><strong className="text-white">24–48 hours before pickup:</strong> Partial refund, admin charges may apply.</li>
+            <li><strong className="text-white">Same-day cancellation:</strong> No refund.</li>
+            <li><strong className="text-white">No-shows forfeit booking payment.</strong></li>
           </ul>
         </div>
 
@@ -117,7 +162,7 @@ export default function Terms() {
         <div className="bg-gradient-to-r from-dark-900 via-dark-800 to-dark-900 p-6 rounded-2xl border border-brand-500/30 text-center space-y-3">
           <h3 className="text-sm font-bold text-white">Have Questions Regarding Our Terms?</h3>
           <p className="text-xs text-slate-400 max-w-xl mx-auto">
-            Our dispatch desk is available 24/7 to clarify any specific regional clearance or corporate rental requirements.
+            Our dispatch desk is available 24/7 to clarify any specific rental, payment, or vehicle policy requirement.
           </p>
           <div className="pt-2 flex flex-wrap items-center justify-center gap-3">
             <Link
