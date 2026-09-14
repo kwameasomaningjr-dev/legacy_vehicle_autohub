@@ -96,7 +96,9 @@ export default function Footer() {
             <div className="space-y-3 text-sm">
               <div className="flex items-start gap-3">
                 <MapPin className="w-5 h-5 text-brand-500 shrink-0 mt-0.5" />
-                <span>Redemption Road, Community 9, Tema, Ghana</span>
+                <a href="https://maps.app.goo.gl/tu9Dy8RmvqGqNxW4A?g_st=iw" target="_blank" rel="noreferrer" className="hover:text-white transition-colors">
+                  Redemption Road, Community 9, Tema, Ghana
+                </a>
               </div>
 
               <div className="flex items-start gap-3">

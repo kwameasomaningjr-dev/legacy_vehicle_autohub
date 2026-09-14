@@ -159,7 +159,9 @@ export default function Contact() {
             </div>
             <div>
               <h4 className="text-sm font-bold text-white">Tema Office</h4>
-              <p className="text-xs text-slate-400">Redemption Road, Community 9, Tema</p>
+              <a href="https://maps.app.goo.gl/tu9Dy8RmvqGqNxW4A?g_st=iw" target="_blank" rel="noreferrer" className="text-xs text-slate-400 hover:text-white transition-colors">
+                Redemption Road, Community 9, Tema
+              </a>
             </div>
             <span className="text-xs font-medium text-slate-300 block">Greater Accra Region, Ghana</span>
           </div>
@@ -461,8 +463,8 @@ export default function Contact() {
               {/* Map Iframe */}
               <div className="relative h-80 sm:h-96 rounded-2xl overflow-hidden border border-white/10 bg-dark-900">
                 <iframe
-                  title="Legacy Vehicle Hub Accra Location Map"
-                  src="https://www.google.com/maps?q=Redemption+Road,+Community+9,+Tema,+Ghana&output=embed"
+                  title="Legacy Vehicle Hub Tema Location Map"
+                  src="https://maps.app.goo.gl/tu9Dy8RmvqGqNxW4A?g_st=iw"
                   width="100%"
                   height="100%"
                   style={{ border: 0, filter: 'invert(90%) hue-rotate(180deg)' }}
@@ -473,7 +475,7 @@ export default function Contact() {
               </div>
 
               <div className="text-xs text-slate-400 space-y-1">
-                <p><strong className="text-slate-200">Address:</strong> Redemption Road, Community 9, Tema, Ghana.</p>
+                <p><strong className="text-slate-200">Address:</strong> <a href="https://maps.app.goo.gl/tu9Dy8RmvqGqNxW4A?g_st=iw" target="_blank" rel="noreferrer" className="hover:text-white transition-colors">Redemption Road, Community 9, Tema, Ghana.</a></p>
                 <p><strong className="text-slate-200">WhatsApp / Main:</strong> {DEFAULT_PHONE_DISPLAY}</p>
                 <p><strong className="text-slate-200">Dispatch Line 2:</strong> {SECONDARY_PHONE_DISPLAY}</p>
               </div>
