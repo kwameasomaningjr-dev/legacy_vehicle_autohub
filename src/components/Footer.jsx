@@ -92,11 +92,13 @@ export default function Footer() {
 
           {/* Contact & Hours */}
           <div className="space-y-4">
-            <h3 className="text-white text-base font-bold tracking-wide uppercase">Accra Office</h3>
+            <h3 className="text-white text-base font-bold tracking-wide uppercase">Tema Office</h3>
             <div className="space-y-3 text-sm">
               <div className="flex items-start gap-3">
                 <MapPin className="w-5 h-5 text-brand-500 shrink-0 mt-0.5" />
-                <span>Boundary Road, East Legon (Near Lagos Avenue), Accra, Ghana</span>
+                <a href="https://maps.app.goo.gl/tu9Dy8RmvqGqNxW4A?g_st=iw" target="_blank" rel="noreferrer" className="hover:text-white transition-colors">
+                  Redemption Road, Community 9, Tema, Ghana
+                </a>
               </div>
 
               <div className="flex items-start gap-3">
@@ -113,7 +115,12 @@ export default function Footer() {
 
               <div className="flex items-center gap-3">
                 <Mail className="w-4 h-4 text-brand-500 shrink-0" />
-                <a href="mailto:info@legacyvehiclehubgh.com" className="hover:text-white transition-colors text-xs">
+                <a
+                  href="https://mail.google.com/mail/?view=cm&fs=1&to=info%40legacyvehiclehubgh.com&su=Vehicle%20Rental%20Inquiry&body=Hello%20Legacy%20Vehicle%20Hub%2C%0A%0AI%20would%20like%20to%20make%20a%20vehicle%20rental%20inquiry."
+                  target="_blank"
+                  rel="noreferrer"
+                  className="hover:text-white transition-colors text-xs"
+                >
                   info@legacyvehiclehubgh.com
                 </a>
               </div>
