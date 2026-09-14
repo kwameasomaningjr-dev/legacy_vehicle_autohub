@@ -74,16 +74,6 @@ export default function AdminDashboard() {
           </div>
 
           <div className="flex items-center gap-3 self-start sm:self-auto">
-            {/* Dark / Light Theme Toggle */}
-            <button
-              onClick={toggleTheme}
-              className="px-3 py-2 rounded-xl bg-white dark:bg-dark-800 text-slate-800 dark:text-slate-200 text-xs font-semibold flex items-center gap-1.5 border border-slate-300 dark:border-white/10 hover:scale-105 transition-all shadow-sm"
-              title={isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
-            >
-              {isDark ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-slate-700" />}
-              <span>{isDark ? 'Light Mode' : 'Dark Mode'}</span>
-            </button>
-
             <Link
               to="/"
               className="px-4 py-2 rounded-xl bg-white dark:bg-dark-800 hover:bg-slate-100 dark:hover:bg-dark-700 text-slate-800 dark:text-slate-200 text-xs font-semibold flex items-center gap-1.5 border border-slate-300 dark:border-white/10 shadow-sm"

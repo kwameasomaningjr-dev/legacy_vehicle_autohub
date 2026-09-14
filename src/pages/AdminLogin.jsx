@@ -44,22 +44,12 @@ export default function AdminLogin() {
       
       <div className="w-full max-w-md space-y-6">
         
-        {/* Top bar: Back Link & Theme Toggle */}
-        <div className="flex items-center justify-between">
+        {/* Top bar: Back Link */}
+        <div>
           <Link to="/" className="inline-flex items-center gap-1.5 text-xs text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors font-medium">
             <ArrowLeft className="w-3.5 h-3.5" />
             <span>Return to Main Website</span>
           </Link>
-
-          <button
-            type="button"
-            onClick={toggleTheme}
-            className="p-2 rounded-xl bg-slate-200 dark:bg-dark-800 text-slate-700 dark:text-slate-300 border border-slate-300 dark:border-slate-700 hover:scale-105 transition-all text-xs font-semibold flex items-center gap-1.5"
-            title={isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
-          >
-            {isDark ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-slate-700" />}
-            <span className="hidden sm:inline">{isDark ? 'Light' : 'Dark'}</span>
-          </button>
         </div>
 
         {/* Card Shell */}
