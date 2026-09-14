@@ -14,7 +14,7 @@ export default function About() {
             <Sparkles className="w-3.5 h-3.5" />
             <span>Ghana's Preferred Car Hire Partner</span>
           </div>
-          <h1 className="text-3xl sm:text-5xl font-black text-white">About Legacy Auto Hub</h1>
+          <h1 className="text-3xl sm:text-5xl font-black text-white">About Legacy Vehicle Hub</h1>
           <p className="text-sm text-slate-300 max-w-3xl leading-relaxed">
             Founded with a commitment to reliability, luxury, and transparent rental pricing across Ghana. We connect corporate executives, tourists, and local travelers with clean, well-maintained vehicles.
           </p>
@@ -32,7 +32,7 @@ export default function About() {
               Redefining Car Rental Standards in Ghana
             </h2>
             <p className="text-sm text-slate-300 leading-relaxed">
-              At Legacy Auto Hub, we recognize that renting a car should be effortless and dependable. Whether navigating the vibrant streets of Accra or embarking on long-haul trips across Ashanti, Western, or Central regions, our clients deserve top-tier safety and comfort.
+              At Legacy Vehicle Hub, we recognize that renting a car should be effortless and dependable. Whether navigating the vibrant streets of Accra or embarking on long-haul trips across Ashanti, Western, or Central regions, our clients deserve top-tier safety and comfort.
             </p>
             <p className="text-sm text-slate-300 leading-relaxed">
               We operate a modern, rigorously-inspected fleet ranging from compact fuel-efficient sedans to commanding 4x4 SUVs and 15-seater executive shuttles.
@@ -53,7 +53,7 @@ export default function About() {
           <div className="relative rounded-3xl overflow-hidden border border-white/10 shadow-2xl">
             <img
               src="https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&w=1200&q=80"
-              alt="Legacy Auto Hub Ghana Chauffeur Fleet"
+              alt="Legacy Vehicle Hub Ghana Chauffeur Fleet"
               className="w-full h-[400px] object-cover"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-dark-900 via-transparent to-transparent opacity-80" />

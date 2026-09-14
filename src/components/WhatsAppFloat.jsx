@@ -13,7 +13,7 @@ export default function WhatsAppFloat() {
       href={whatsappUrl}
       target="_blank"
       rel="noopener noreferrer"
-      aria-label="Chat with Legacy Auto Hub on WhatsApp"
+      aria-label="Chat with Legacy Vehicle Hub on WhatsApp"
       className="fixed bottom-6 right-6 z-40 group flex items-center gap-3 p-3.5 sm:px-4 sm:py-3 rounded-full bg-emerald-600 hover:bg-emerald-500 text-white shadow-2xl shadow-emerald-500/40 border border-emerald-400/40 transition-all duration-300 hover:scale-105 animate-pulse-subtle"
     >
       <div className="relative">
