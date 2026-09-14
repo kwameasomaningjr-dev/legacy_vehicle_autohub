@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { X, Plus, Trash2, CheckCircle2, Car, Fuel, Users, Wind, DollarSign, Image as ImageIcon, Sparkles } from 'lucide-react';
+import { X, Plus, Trash2, CheckCircle2, Car, Fuel, Users, Wind, DollarSign, Image as ImageIcon, Sparkles, Upload } from 'lucide-react';
 import { CATEGORIES, TRANSMISSIONS } from '../data/cars';
 
 export default function AdminCarModal({ car = null, onClose, onSave }) {
@@ -19,9 +19,9 @@ export default function AdminCarModal({ car = null, onClose, onSave }) {
     isAvailable: car?.isAvailable !== false,
     description: car?.description || '',
     featuresText: car?.features ? car.features.join(', ') : 'Bluetooth, Reverse Camera, Leather Seats, Air Conditioning',
-    image1: car?.images?.[0] || 'https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?auto=format&fit=crop&w=1200&q=80',
-    image2: car?.images?.[1] || 'https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&w=1200&q=80',
-    image3: car?.images?.[2] || 'https://images.unsplash.com/photo-1563720223185-11003d516935?auto=format&fit=crop&w=1200&q=80'
+    image1: car?.images?.[0] || '',
+    image2: car?.images?.[1] || '',
+    image3: car?.images?.[2] || ''
   });
 
   useEffect(() => {
@@ -39,13 +39,30 @@ export default function AdminCarModal({ car = null, onClose, onSave }) {
     }));
   };
 
+  const handleFileUpload = (e, fieldName) => {
+    const file = e.target.files && e.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setFormData(prev => ({
+        ...prev,
+        [fieldName]: reader.result
+      }));
+    };
+    reader.readAsDataURL(file);
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    const fallbackPrimary = 'https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?auto=format&fit=crop&w=1200&q=80';
+    const primaryImg = formData.image1 || fallbackPrimary;
 
     const preparedData = {
       ...formData,
       features: formData.featuresText.split(',').map(s => s.trim()).filter(Boolean),
-      images: [formData.image1, formData.image2, formData.image3].filter(Boolean)
+      images: [primaryImg, formData.image2, formData.image3].filter(Boolean)
     };
 
     delete preparedData.featuresText;
@@ -242,34 +259,81 @@ export default function AdminCarModal({ car = null, onClose, onSave }) {
             </label>
           </div>
 
-          {/* Unsplash Image URLs */}
-          <div className="space-y-2">
-            <label className="text-slate-300 font-semibold block">Vehicle Image URLs (Exterior, Angle, Interior)</label>
-            <input
-              type="url"
-              name="image1"
-              required
-              placeholder="Primary Image URL"
-              value={formData.image1}
-              onChange={handleChange}
-              className="w-full bg-dark-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-brand-500 mb-1"
-            />
-            <input
-              type="url"
-              name="image2"
-              placeholder="Secondary Image URL (Optional)"
-              value={formData.image2}
-              onChange={handleChange}
-              className="w-full bg-dark-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-brand-500 mb-1"
-            />
-            <input
-              type="url"
-              name="image3"
-              placeholder="Interior Image URL (Optional)"
-              value={formData.image3}
-              onChange={handleChange}
-              className="w-full bg-dark-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-brand-500"
-            />
+          {/* ACTUAL IMAGE UPLOAD SECTION */}
+          <div className="space-y-3 bg-dark-900/80 p-4 rounded-2xl border border-white/10">
+            <div className="flex items-center justify-between">
+              <div>
+                <label className="text-slate-200 font-bold text-xs flex items-center gap-1.5">
+                  <Upload className="w-4 h-4 text-brand-400" />
+                  <span>Upload Vehicle Photos (File Upload)</span>
+                </label>
+                <p className="text-[11px] text-slate-400">Select image files directly from your computer or mobile device.</p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
+              {[
+                { key: 'image1', label: 'Primary Photo *' },
+                { key: 'image2', label: 'Secondary Angle' },
+                { key: 'image3', label: 'Interior Cabin' }
+              ].map((slot) => {
+                const currentImg = formData[slot.key];
+                return (
+                  <div key={slot.key} className="space-y-2">
+                    <span className="text-[11px] font-semibold text-slate-300 block">{slot.label}</span>
+                    
+                    <div className="relative group rounded-xl border border-white/10 bg-dark-800 overflow-hidden h-32 flex flex-col items-center justify-center text-center p-2">
+                      {currentImg ? (
+                        <>
+                          <img src={currentImg} alt={slot.label} className="w-full h-full object-cover rounded-lg" />
+                          <div className="absolute inset-0 bg-dark-900/80 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2 p-2 backdrop-blur-xs">
+                            <label className="px-2.5 py-1.5 rounded-lg bg-brand-500 hover:bg-brand-400 text-dark-900 font-bold cursor-pointer text-xs flex items-center gap-1">
+                              <Upload className="w-3.5 h-3.5" />
+                              <span>Change</span>
+                              <input
+                                type="file"
+                                accept="image/*"
+                                className="hidden"
+                                onChange={(e) => handleFileUpload(e, slot.key)}
+                              />
+                            </label>
+                            <button
+                              type="button"
+                              onClick={() => setFormData(prev => ({ ...prev, [slot.key]: '' }))}
+                              className="p-1.5 rounded-lg bg-red-500/80 hover:bg-red-500 text-white text-xs font-bold"
+                              title="Remove image"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
+                        </>
+                      ) : (
+                        <label className="w-full h-full flex flex-col items-center justify-center gap-1.5 cursor-pointer hover:bg-white/5 transition-colors rounded-lg border-2 border-dashed border-slate-700 hover:border-brand-500/50 p-2">
+                          <ImageIcon className="w-6 h-6 text-brand-400" />
+                          <span className="text-[11px] font-bold text-slate-300">Click to Upload File</span>
+                          <span className="text-[9px] text-slate-500">JPG, PNG, WEBP</span>
+                          <input
+                            type="file"
+                            accept="image/*"
+                            className="hidden"
+                            onChange={(e) => handleFileUpload(e, slot.key)}
+                          />
+                        </label>
+                      )}
+                    </div>
+
+                    <input
+                      type="text"
+                      name={slot.key}
+                      placeholder="Or paste image URL..."
+                      value={formData[slot.key]}
+                      onChange={handleChange}
+                      className="w-full bg-dark-800 border border-slate-800 rounded-lg px-2.5 py-1 text-[10px] text-slate-300 focus:outline-none focus:border-brand-500 font-mono"
+                    />
+                  </div>
+                );
+              })}
+            </div>
           </div>
 
           {/* Description */}
