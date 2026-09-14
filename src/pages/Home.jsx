@@ -290,7 +290,7 @@ export default function Home() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           
           <div className="space-y-6">
-            <span className="text-xs font-bold text-brand-400 uppercase tracking-widest">Why Legacy Auto Hub?</span>
+            <span className="text-xs font-bold text-brand-400 uppercase tracking-widest">Why Legacy Vehicle Hub?</span>
             <h2 className="text-3xl sm:text-4xl font-black text-white leading-tight">
               Built on Trust, Safety & Superior Fleet Quality
             </h2>
@@ -335,7 +335,7 @@ export default function Home() {
           <div className="relative rounded-3xl overflow-hidden border border-white/10 shadow-2xl">
             <img
               src="https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&w=1200&q=80"
-              alt="Legacy Auto Hub Ghana Fleet"
+              alt="Legacy Vehicle Hub Ghana Fleet"
               className="w-full h-full object-cover"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-dark-900 via-transparent to-transparent opacity-90" />

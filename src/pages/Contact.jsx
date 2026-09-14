@@ -51,7 +51,7 @@ export default function Contact() {
         const web3Payload = {
           access_key: formData.accessKey,
           subject: `Contact Page Booking: ${selectedCarObj.name} - ${formData.fullName}`,
-          from_name: "Legacy Auto Hub Contact Form",
+          from_name: "Legacy Vehicle Hub Contact Form",
           to_email: "info@legacyautohubgh.com",
           "Vehicle Name": selectedCarObj.name,
           "Travel Scope": formData.travelScope,
@@ -461,7 +461,7 @@ export default function Contact() {
               {/* Map Iframe */}
               <div className="relative h-80 sm:h-96 rounded-2xl overflow-hidden border border-white/10 bg-dark-900">
                 <iframe
-                  title="Legacy Auto Hub Accra Location Map"
+                  title="Legacy Vehicle Hub Accra Location Map"
                   src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3970.4283838029517!2d-0.15842882414730638!3d5.649567994331713!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x10207d5718dfd1d7%3A0x6b84032d8edb0e77!2sEast%20Legon%2C%20Accra!5e0!3m2!1sen!2sgh!4v1700000000000!5m2!1sen!2sgh"
                   width="100%"
                   height="100%"
