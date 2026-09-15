@@ -1,9 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { X, Plus, Trash2, CheckCircle2, Car, Fuel, Users, Wind, DollarSign, Image as ImageIcon, Sparkles, Upload } from 'lucide-react';
+import { X, Plus, Trash2, CheckCircle2, Car, Fuel, Users, Wind, DollarSign, Image as ImageIcon, Sparkles, Upload, Loader2, Cloud } from 'lucide-react';
 import { CATEGORIES, TRANSMISSIONS } from '../data/cars';
+import { uploadImageToCloudinary, getCloudinaryConfig } from '../utils/cloudinary';
 
 export default function AdminCarModal({ car = null, onClose, onSave }) {
   const isEditing = Boolean(car);
+  const { isConfigured: isCloudinaryConfigured, cloudName } = getCloudinaryConfig();
+
+  const [uploadingSlot, setUploadingSlot] = useState(null);
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const [uploadError, setUploadError] = useState(null);
 
   const [formData, setFormData] = useState({
     name: car?.name || '',
@@ -39,18 +45,29 @@ export default function AdminCarModal({ car = null, onClose, onSave }) {
     }));
   };
 
-  const handleFileUpload = (e, fieldName) => {
+  const handleFileUpload = async (e, fieldName) => {
     const file = e.target.files && e.target.files[0];
     if (!file) return;
 
-    const reader = new FileReader();
-    reader.onloadend = () => {
+    setUploadingSlot(fieldName);
+    setUploadProgress(0);
+    setUploadError(null);
+
+    const res = await uploadImageToCloudinary(file, (percent) => {
+      setUploadProgress(percent);
+    });
+
+    setUploadingSlot(null);
+    setUploadProgress(0);
+
+    if (res.success) {
       setFormData(prev => ({
         ...prev,
-        [fieldName]: reader.result
+        [fieldName]: res.url
       }));
-    };
-    reader.readAsDataURL(file);
+    } else {
+      setUploadError(`Upload error: ${res.error || 'Failed to upload image'}`);
+    }
   };
 
   const handleSubmit = (e) => {
@@ -259,31 +276,51 @@ export default function AdminCarModal({ car = null, onClose, onSave }) {
             </label>
           </div>
 
-          {/* ACTUAL IMAGE UPLOAD SECTION */}
+          {/* CLOUDINARY IMAGE UPLOAD SECTION */}
           <div className="space-y-3 bg-muted p-4 rounded-2xl border border-border">
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
               <div>
                 <label className="text-foreground font-bold text-xs flex items-center gap-1.5">
-                  <Upload className="w-4 h-4 text-primary" />
-                  <span>Upload Vehicle Photos (File Upload)</span>
+                  <Cloud className="w-4 h-4 text-primary" />
+                  <span>Cloudinary Vehicle Photo Uploader</span>
                 </label>
-                <p className="text-[11px] text-muted-foreground">Select image files directly from your computer or mobile device.</p>
+                <p className="text-[11px] text-muted-foreground">Directly upload high-res car photos to Cloudinary CDN or paste URL.</p>
+              </div>
+
+              <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold border shrink-0 bg-primary/10 text-primary border-primary/20">
+                <Cloud className="w-3 h-3" />
+                <span>{isCloudinaryConfigured ? `Cloudinary (${cloudName})` : 'Cloudinary (Local Fallback Mode)'}</span>
               </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
+            {uploadError && (
+              <div className="p-2.5 rounded-xl bg-destructive/10 border border-destructive/30 text-destructive text-xs font-semibold flex items-center justify-between">
+                <span>{uploadError}</span>
+                <button type="button" onClick={() => setUploadError(null)} className="text-xs font-bold underline">Dismiss</button>
+              </div>
+            )}
+
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
               {[
                 { key: 'image1', label: 'Primary Photo *' },
                 { key: 'image2', label: 'Secondary Angle' },
                 { key: 'image3', label: 'Interior Cabin' }
               ].map((slot) => {
                 const currentImg = formData[slot.key];
+                const isUploadingThis = uploadingSlot === slot.key;
+
                 return (
                   <div key={slot.key} className="space-y-2">
                     <span className="text-[11px] font-semibold text-muted-foreground block">{slot.label}</span>
                     
                     <div className="relative group rounded-xl border border-border bg-card overflow-hidden h-32 flex flex-col items-center justify-center text-center p-2">
-                      {currentImg ? (
+                      {isUploadingThis ? (
+                        <div className="flex flex-col items-center justify-center gap-1.5 p-2 text-primary">
+                          <Loader2 className="w-6 h-6 animate-spin" />
+                          <span className="text-xs font-bold">Uploading...</span>
+                          <span className="text-[10px] font-mono">{uploadProgress}%</span>
+                        </div>
+                      ) : currentImg ? (
                         <>
                           <img src={currentImg} alt={slot.label} className="w-full h-full object-cover rounded-lg" />
                           <div className="absolute inset-0 bg-black/75 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2 p-2 backdrop-blur-xs">
@@ -310,7 +347,7 @@ export default function AdminCarModal({ car = null, onClose, onSave }) {
                       ) : (
                         <label className="w-full h-full flex flex-col items-center justify-center gap-1.5 cursor-pointer hover:bg-muted transition-colors rounded-lg border-2 border-dashed border-border p-2">
                           <ImageIcon className="w-6 h-6 text-primary" />
-                          <span className="text-[11px] font-bold text-foreground">Click to Upload File</span>
+                          <span className="text-[11px] font-bold text-foreground">Upload to Cloudinary</span>
                           <span className="text-[9px] text-muted-foreground">JPG, PNG, WEBP</span>
                           <input
                             type="file"

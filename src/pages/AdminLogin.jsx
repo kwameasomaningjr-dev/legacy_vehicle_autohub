@@ -1,14 +1,13 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { ShieldCheck, Lock, User, Key, ArrowLeft, Sparkles, AlertCircle, LogIn, Sun, Moon } from 'lucide-react';
+import { ShieldCheck, Lock, User, ArrowLeft, AlertCircle, LogIn } from 'lucide-react';
 import { useCars } from '../context/CarContext';
 import { useTheme } from '../context/ThemeContext';
 
 export default function AdminLogin() {
   const navigate = useNavigate();
   const { loginAdmin, isAdminAuthenticated } = useCars();
-  const { theme, toggleTheme } = useTheme();
-  const isDark = theme === 'dark';
+  const { theme } = useTheme();
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -20,12 +19,6 @@ export default function AdminLogin() {
       navigate('/admin');
     }
   }, [isAdminAuthenticated, navigate]);
-
-  const handleFillDemo = () => {
-    setUsername('admin');
-    setPassword('password123');
-    setErrorMsg('');
-  };
 
   const handleLogin = (e) => {
     e.preventDefault();
@@ -71,32 +64,7 @@ export default function AdminLogin() {
             </div>
           </div>
 
-          {/* Quick Demo Credentials Box */}
-          <div className="bg-muted p-3.5 rounded-2xl border border-primary/30 space-y-2">
-            <div className="flex items-center justify-between text-xs">
-              <span className="text-primary font-bold flex items-center gap-1">
-                <Sparkles className="w-3.5 h-3.5" />
-                <span>Demo Admin Credentials</span>
-              </span>
-              <button
-                type="button"
-                onClick={handleFillDemo}
-                className="px-2.5 py-1 rounded-lg bg-primary text-primary-foreground font-extrabold text-[10px] hover:opacity-90 transition-colors shadow"
-              >
-                Auto-Fill Demo
-              </button>
-            </div>
-            <div className="grid grid-cols-2 gap-2 text-[11px] font-mono pt-1 border-t border-border">
-              <div>
-                <span className="text-muted-foreground block text-[10px] uppercase font-sans">Username</span>
-                <span className="text-foreground font-bold">admin</span>
-              </div>
-              <div>
-                <span className="text-muted-foreground block text-[10px] uppercase font-sans">Password</span>
-                <span className="text-foreground font-bold">password123</span>
-              </div>
-            </div>
-          </div>
+
 
           {/* Form */}
           <form onSubmit={handleLogin} className="space-y-4 text-xs">

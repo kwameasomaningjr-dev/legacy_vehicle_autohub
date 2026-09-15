@@ -72,17 +72,35 @@ export function CarProvider({ children }) {
 
   // Auth helper methods
   const loginAdmin = (username, password) => {
-    if (username.trim().toLowerCase() === 'admin' && password === 'password123') {
+    const validUsername = (import.meta.env.VITE_ADMIN_USERNAME || 'admin').trim().toLowerCase();
+    const validPassword = import.meta.env.VITE_ADMIN_PASSWORD || 'password123';
+
+    const inputUser = username.trim().toLowerCase();
+    const inputPass = password;
+
+    if (inputUser === validUsername && inputPass === validPassword) {
       setIsAdminAuthenticated(true);
-      localStorage.setItem(AUTH_STORAGE_KEY, 'true');
+      try {
+        localStorage.setItem(AUTH_STORAGE_KEY, 'true');
+      } catch (e) {
+        console.error('Error saving auth to localStorage:', e);
+      }
       return { success: true };
     }
-    return { success: false, message: 'Invalid admin credentials. Use admin / password123' };
+
+    return {
+      success: false,
+      message: `Invalid admin credentials. Please check your username and password.`
+    };
   };
 
   const logoutAdmin = () => {
     setIsAdminAuthenticated(false);
-    localStorage.removeItem(AUTH_STORAGE_KEY);
+    try {
+      localStorage.removeItem(AUTH_STORAGE_KEY);
+    } catch (e) {
+      console.error('Error removing auth from localStorage:', e);
+    }
   };
 
   // Car CRUD Operations

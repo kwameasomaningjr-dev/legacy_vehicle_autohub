@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { ShieldCheck, LogOut, Plus, Edit3, Trash2, CheckCircle2, XCircle, Car, DollarSign, Users, Layers, MessageSquare, Copy, RotateCcw, ExternalLink, Sparkles, Filter, Sun, Moon, Download, FileSpreadsheet } from 'lucide-react';
+import { ShieldCheck, LogOut, Plus, Edit3, Trash2, CheckCircle2, XCircle, Car, DollarSign, Users, Layers, MessageSquare, Copy, RotateCcw, ExternalLink, Sparkles, Filter, Sun, Moon, Download, FileSpreadsheet, Cloud, Key } from 'lucide-react';
 import { useCars } from '../context/CarContext';
 import { useTheme } from '../context/ThemeContext';
+import { getCloudinaryConfig } from '../utils/cloudinary';
 import AdminCarModal from '../components/AdminCarModal';
 
 export default function AdminDashboard() {
@@ -532,6 +533,31 @@ export default function AdminDashboard() {
                   <Download className="w-4 h-4" />
                   <span>Export Fleet Catalog (CSV)</span>
                 </button>
+              </div>
+
+              {/* Cloudinary Integration Status */}
+              <div className="pt-4 border-t border-border space-y-3">
+                <div className="flex items-center justify-between">
+                  <h4 className="text-xs font-bold text-foreground flex items-center gap-1.5">
+                    <Cloud className="w-4 h-4 text-primary" />
+                    <span>Cloudinary CDN Status & Upload Preset</span>
+                  </h4>
+                  <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${
+                    getCloudinaryConfig().isConfigured
+                      ? 'bg-emerald-500/10 text-emerald-600 border-emerald-500/30'
+                      : 'bg-primary/10 text-primary border-primary/20'
+                  }`}>
+                    {getCloudinaryConfig().isConfigured ? 'Cloudinary Active' : 'Fallback Local Mode'}
+                  </span>
+                </div>
+                <p className="text-[11px] text-muted-foreground">
+                  Configured via environment variables in <code className="text-primary bg-muted px-1 py-0.5 rounded">.env</code> file.
+                </p>
+                <div className="bg-muted p-3 rounded-2xl border border-border text-[11px] font-mono space-y-1 text-muted-foreground">
+                  <div>VITE_CLOUDINARY_CLOUD_NAME: <strong className="text-foreground">{getCloudinaryConfig().cloudName || '(Not set)'}</strong></div>
+                  <div>VITE_CLOUDINARY_UPLOAD_PRESET: <strong className="text-foreground">{getCloudinaryConfig().uploadPreset || '(Not set)'}</strong></div>
+                  <div>VITE_ADMIN_USERNAME: <strong className="text-foreground">{import.meta.env.VITE_ADMIN_USERNAME || 'admin'}</strong></div>
+                </div>
               </div>
 
               {/* Developer JSON Copy */}
