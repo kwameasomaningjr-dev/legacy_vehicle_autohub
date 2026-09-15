@@ -3,10 +3,12 @@ import { MapPin, Phone, Mail, Clock, MessageSquare, Send, CheckCircle2, Car, Cal
 import { useCars } from '../context/CarContext';
 import { useTheme } from '../context/ThemeContext';
 import { DEFAULT_PHONE_DISPLAY, SECONDARY_PHONE_DISPLAY, DEFAULT_WHATSAPP_NUMBER, buildWhatsAppUrl, generateCarBookingMessage, generateGeneralInquiryMessage } from '../utils/whatsapp';
+import { usePhoneModal } from '../context/PhoneContext';
 
 export default function Contact() {
   const { cars, addInquiry } = useCars();
   const { theme, toggleTheme } = useTheme();
+  const { openPhoneModal } = usePhoneModal();
   const isDark = theme === 'dark';
 
   // Form State
@@ -170,9 +172,9 @@ export default function Contact() {
               <h4 className={`text-sm font-bold ${isDark ? 'text-white' : 'text-slate-900'}`}>Dispatch Line 2</h4>
               <p className={`text-xs ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>Secondary Support Line</p>
             </div>
-            <a href={`tel:${SECONDARY_PHONE_DISPLAY.replace(/\s+/g, '')}`} className={`text-xs font-bold ${isDark ? 'text-brand-400 hover:text-brand-300' : 'text-brand-700 hover:text-brand-900'} hover:underline block`}>
+            <button onClick={openPhoneModal} className={`text-xs font-bold ${isDark ? 'text-brand-400 hover:text-brand-300' : 'text-brand-700 hover:text-brand-900'} hover:underline block text-left`}>
               {SECONDARY_PHONE_DISPLAY}
-            </a>
+            </button>
           </div>
 
           <div className={`glass-card p-5 rounded-2xl border ${isDark ? 'border-white/10 bg-dark-800' : 'border-slate-200 bg-white'} space-y-3 shadow-md`}>

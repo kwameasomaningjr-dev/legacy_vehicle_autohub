@@ -2,8 +2,10 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { MapPin, Phone, Mail, Clock, Shield, CheckCircle, ArrowRight } from 'lucide-react';
 import { DEFAULT_PHONE_DISPLAY, SECONDARY_PHONE_DISPLAY, DEFAULT_WHATSAPP_NUMBER, buildWhatsAppUrl, generateGeneralInquiryMessage } from '../utils/whatsapp';
+import { usePhoneModal } from '../context/PhoneContext';
 
 export default function Footer() {
+  const { openPhoneModal } = usePhoneModal();
   return (
     <footer className="bg-slate-900 dark:bg-dark-900 border-t border-slate-800 dark:border-slate-800/80 text-slate-400 pt-16 pb-8 transition-colors duration-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -104,12 +106,12 @@ export default function Footer() {
               <div className="flex items-start gap-3">
                 <Phone className="w-4 h-4 text-brand-500 shrink-0 mt-1" />
                 <div className="space-y-1">
-                  <a href={`tel:${DEFAULT_PHONE_DISPLAY.replace(/\s+/g, '')}`} className="hover:text-white transition-colors block">
+                  <button onClick={openPhoneModal} className="hover:text-white transition-colors block text-left">
                     <strong className="text-slate-200">WhatsApp/Main:</strong> {DEFAULT_PHONE_DISPLAY}
-                  </a>
-                  <a href={`tel:${SECONDARY_PHONE_DISPLAY.replace(/\s+/g, '')}`} className="hover:text-white transition-colors block text-xs">
+                  </button>
+                  <button onClick={openPhoneModal} className="hover:text-white transition-colors block text-xs text-left">
                     <strong className="text-slate-200">Dispatch Line 2:</strong> {SECONDARY_PHONE_DISPLAY}
-                  </a>
+                  </button>
                 </div>
               </div>
 

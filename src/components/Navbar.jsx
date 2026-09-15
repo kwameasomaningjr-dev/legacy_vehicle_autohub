@@ -4,6 +4,7 @@ import { Phone, Menu, X, ShieldCheck, MessageSquare, Sun, Moon, Lock } from 'luc
 import { DEFAULT_PHONE_DISPLAY, SECONDARY_PHONE_DISPLAY, DEFAULT_WHATSAPP_NUMBER, buildWhatsAppUrl, generateGeneralInquiryMessage } from '../utils/whatsapp';
 import { useTheme } from '../context/ThemeContext';
 import { useCars } from '../context/CarContext';
+import { usePhoneModal } from '../context/PhoneContext';
 
 export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -11,6 +12,7 @@ export default function Navbar() {
   const location = useLocation();
   const { theme, toggleTheme } = useTheme();
   const { isAdminAuthenticated } = useCars();
+  const { openPhoneModal } = usePhoneModal();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -114,13 +116,14 @@ export default function Navbar() {
               )}
             </button>
 
-            <a
-              href={`tel:${DEFAULT_PHONE_DISPLAY.replace(/\s+/g, '')}`}
+            <button
+              onClick={openPhoneModal}
               className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-dark-800 dark:hover:bg-dark-700 text-slate-800 dark:text-slate-200 border border-slate-300 dark:border-slate-700 text-xs font-semibold transition-colors"
+              title="View & Call Support Phone Numbers"
             >
               <Phone className="w-4 h-4 text-brand-500" />
               <span className="hidden xl:inline">{DEFAULT_PHONE_DISPLAY}</span>
-            </a>
+            </button>
 
             <a
               href={buildWhatsAppUrl(DEFAULT_WHATSAPP_NUMBER, generateGeneralInquiryMessage())}
@@ -153,13 +156,14 @@ export default function Navbar() {
               {theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5 text-slate-700" />}
             </button>
 
-            <a
-              href={`tel:${DEFAULT_PHONE_DISPLAY.replace(/\s+/g, '')}`}
-              className="p-2 rounded-lg bg-slate-100 dark:bg-dark-800 text-brand-500 border border-slate-300 dark:border-slate-700"
-              aria-label="Call Us"
+            <button
+              onClick={openPhoneModal}
+              className="p-2 rounded-lg bg-slate-100 dark:bg-dark-800 text-brand-500 border border-slate-300 dark:border-slate-700 hover:scale-105 transition-transform"
+              aria-label="Open Phone Numbers"
+              title="View & Call Support Phone Numbers"
             >
               <Phone className="w-5 h-5" />
-            </a>
+            </button>
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="p-2 rounded-lg bg-slate-100 dark:bg-dark-800 text-slate-800 dark:text-slate-200 border border-slate-300 dark:border-slate-700 focus:outline-none"
@@ -215,21 +219,16 @@ export default function Navbar() {
               </span>
             </button>
 
-            <a
-              href={`tel:${DEFAULT_PHONE_DISPLAY.replace(/\s+/g, '')}`}
-              className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl bg-slate-100 dark:bg-dark-800 text-slate-800 dark:text-slate-200 border border-slate-300 dark:border-slate-700 font-semibold text-xs"
+            <button
+              onClick={() => {
+                setMobileMenuOpen(false);
+                openPhoneModal();
+              }}
+              className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl bg-slate-100 dark:bg-dark-800 text-slate-800 dark:text-slate-200 border border-slate-300 dark:border-slate-700 font-semibold text-xs hover:bg-slate-200 dark:hover:bg-dark-700 transition-colors"
             >
               <Phone className="w-4 h-4 text-brand-500" />
-              <span>Call Main Line: {DEFAULT_PHONE_DISPLAY}</span>
-            </a>
-
-            <a
-              href={`tel:${SECONDARY_PHONE_DISPLAY.replace(/\s+/g, '')}`}
-              className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl bg-slate-100 dark:bg-dark-800 text-slate-800 dark:text-slate-200 border border-slate-300 dark:border-slate-700 font-semibold text-xs"
-            >
-              <Phone className="w-4 h-4 text-brand-500" />
-              <span>Call Line 2: {SECONDARY_PHONE_DISPLAY}</span>
-            </a>
+              <span>Call Direct Lines ({DEFAULT_PHONE_DISPLAY})</span>
+            </button>
 
             <a
               href={buildWhatsAppUrl(DEFAULT_WHATSAPP_NUMBER, generateGeneralInquiryMessage())}
