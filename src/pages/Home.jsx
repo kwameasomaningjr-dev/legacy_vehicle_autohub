@@ -42,7 +42,7 @@ export default function Home() {
         {/* Background Image with Brighter Visibility */}
         <div className="absolute inset-0 z-0">
           <img
-            src="https://benjirentalservices.com/assets/images/s1.jpg"
+            src="/hero-car.jpg"
             alt="Legacy Vehicle Hub Ghana Luxury Rental"
             className="w-full h-full object-cover object-center opacity-85 brightness-105 scale-105"
           />
