@@ -4,6 +4,7 @@ import { Phone, Menu, X, ShieldCheck, MessageSquare, Sun, Moon, Lock } from 'luc
 import { DEFAULT_PHONE_DISPLAY, SECONDARY_PHONE_DISPLAY, DEFAULT_WHATSAPP_NUMBER, buildWhatsAppUrl, generateGeneralInquiryMessage } from '../utils/whatsapp';
 import { useTheme } from '../context/ThemeContext';
 import { useCars } from '../context/CarContext';
+import { usePhoneModal } from '../context/PhoneContext';
 
 export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -11,6 +12,7 @@ export default function Navbar() {
   const location = useLocation();
   const { theme, toggleTheme } = useTheme();
   const { isAdminAuthenticated } = useCars();
+  const { openPhoneModal } = usePhoneModal();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -103,13 +105,14 @@ export default function Navbar() {
               )}
             </button>
 
-            <a
-              href={`tel:${DEFAULT_PHONE_DISPLAY.replace(/\s+/g, '')}`}
+            <button
+              onClick={openPhoneModal}
               className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-muted hover:bg-card text-foreground border border-border text-xs font-semibold whitespace-nowrap transition-colors shrink-0"
+              title="View & Call Support Phone Numbers"
             >
               <Phone className="w-3.5 h-3.5 text-secondary" />
               <span className="hidden xl:inline whitespace-nowrap">{DEFAULT_PHONE_DISPLAY}</span>
-            </a>
+            </button>
 
             <a
               href={buildWhatsAppUrl(DEFAULT_WHATSAPP_NUMBER, generateGeneralInquiryMessage())}
@@ -142,13 +145,14 @@ export default function Navbar() {
               {theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5 text-primary" />}
             </button>
 
-            <a
-              href={`tel:${DEFAULT_PHONE_DISPLAY.replace(/\s+/g, '')}`}
-              className="p-2 rounded-lg bg-muted text-secondary border border-border"
-              aria-label="Call Us"
+            <button
+              onClick={openPhoneModal}
+              className="p-2 rounded-lg bg-muted text-secondary border border-border hover:scale-105 transition-transform"
+              aria-label="Open Phone Numbers"
+              title="View & Call Support Phone Numbers"
             >
               <Phone className="w-5 h-5" />
-            </a>
+            </button>
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="p-2 rounded-lg bg-muted text-foreground border border-border focus:outline-none"
@@ -204,21 +208,16 @@ export default function Navbar() {
               </span>
             </button>
 
-            <a
-              href={`tel:${DEFAULT_PHONE_DISPLAY.replace(/\s+/g, '')}`}
-              className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl bg-muted text-foreground border border-border font-semibold text-xs"
+            <button
+              onClick={() => {
+                setMobileMenuOpen(false);
+                openPhoneModal();
+              }}
+              className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl bg-muted text-foreground border border-border font-semibold text-xs hover:bg-card transition-colors"
             >
               <Phone className="w-4 h-4 text-secondary" />
-              <span>Call Main Line: {DEFAULT_PHONE_DISPLAY}</span>
-            </a>
-
-            <a
-              href={`tel:${SECONDARY_PHONE_DISPLAY.replace(/\s+/g, '')}`}
-              className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl bg-muted text-foreground border border-border font-semibold text-xs"
-            >
-              <Phone className="w-4 h-4 text-secondary" />
-              <span>Call Line 2: {SECONDARY_PHONE_DISPLAY}</span>
-            </a>
+              <span>Call Direct Lines ({DEFAULT_PHONE_DISPLAY})</span>
+            </button>
 
             <a
               href={buildWhatsAppUrl(DEFAULT_WHATSAPP_NUMBER, generateGeneralInquiryMessage())}

@@ -3,10 +3,12 @@ import { MapPin, Phone, Mail, Clock, MessageSquare, Send, CheckCircle2, Car, Cal
 import { useCars } from '../context/CarContext';
 import { useTheme } from '../context/ThemeContext';
 import { DEFAULT_PHONE_DISPLAY, SECONDARY_PHONE_DISPLAY, DEFAULT_WHATSAPP_NUMBER, buildWhatsAppUrl, generateCarBookingMessage, generateGeneralInquiryMessage } from '../utils/whatsapp';
+import { usePhoneModal } from '../context/PhoneContext';
 
 export default function Contact() {
   const { cars, addInquiry } = useCars();
   const { theme, toggleTheme } = useTheme();
+  const { openPhoneModal } = usePhoneModal();
 
   // Form State
   const [submissionMethod, setSubmissionMethod] = useState('email'); // 'email' | 'whatsapp'
@@ -167,9 +169,9 @@ export default function Contact() {
               <h4 className="text-sm font-bold text-foreground">Dispatch Line 2</h4>
               <p className="text-xs text-muted-foreground">Secondary Support Line</p>
             </div>
-            <a href={`tel:${SECONDARY_PHONE_DISPLAY.replace(/\s+/g, '')}`} className="text-xs font-bold text-primary hover:underline block">
+            <button onClick={openPhoneModal} className="text-xs font-bold text-primary hover:underline block text-left">
               {SECONDARY_PHONE_DISPLAY}
-            </a>
+            </button>
           </div>
 
           <div className="glass-card p-5 rounded-2xl border border-border bg-card text-card-foreground space-y-3 shadow-md">

@@ -6,10 +6,12 @@ import { useCars } from '../context/CarContext';
 import CarCard from '../components/CarCard';
 import CarDetailModal from '../components/CarDetailModal';
 import { DEFAULT_PHONE_DISPLAY, DEFAULT_WHATSAPP_NUMBER, buildWhatsAppUrl, generateGeneralInquiryMessage } from '../utils/whatsapp';
+import { usePhoneModal } from '../context/PhoneContext';
 
 export default function Home() {
   const navigate = useNavigate();
   const { cars } = useCars();
+  const { openPhoneModal } = usePhoneModal();
 
   // Quick Filter State
   const [selectedCategory, setSelectedCategory] = useState("All");
@@ -378,13 +380,13 @@ export default function Home() {
             </div>
 
             <div className="flex flex-col sm:flex-row items-center gap-3 shrink-0">
-              <a
-                href={`tel:${DEFAULT_PHONE_DISPLAY.replace(/\s+/g, '')}`}
+              <button
+                onClick={openPhoneModal}
                 className="w-full sm:w-auto px-6 py-3.5 rounded-xl bg-card text-card-foreground font-bold text-sm flex items-center justify-center gap-2 hover:bg-muted transition-colors shadow-lg"
               >
                 <Phone className="w-4 h-4 text-primary" />
                 <span>Call {DEFAULT_PHONE_DISPLAY}</span>
-              </a>
+              </button>
 
               <a
                 href={buildWhatsAppUrl(DEFAULT_WHATSAPP_NUMBER, generateGeneralInquiryMessage())}

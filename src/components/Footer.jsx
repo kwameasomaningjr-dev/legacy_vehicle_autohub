@@ -2,8 +2,10 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { MapPin, Phone, Mail, Clock, Shield, CheckCircle, ArrowRight } from 'lucide-react';
 import { DEFAULT_PHONE_DISPLAY, SECONDARY_PHONE_DISPLAY, DEFAULT_WHATSAPP_NUMBER, buildWhatsAppUrl, generateGeneralInquiryMessage } from '../utils/whatsapp';
+import { usePhoneModal } from '../context/PhoneContext';
 
 export default function Footer() {
+  const { openPhoneModal } = usePhoneModal();
   return (
     <footer className="bg-card text-card-foreground border-t border-border pt-16 pb-8 transition-colors duration-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -104,12 +106,12 @@ export default function Footer() {
               <div className="flex items-start gap-3">
                 <Phone className="w-4 h-4 text-secondary shrink-0 mt-1" />
                 <div className="space-y-1">
-                  <a href={`tel:${DEFAULT_PHONE_DISPLAY.replace(/\s+/g, '')}`} className="text-muted-foreground hover:text-foreground transition-colors block">
+                  <button onClick={openPhoneModal} className="text-muted-foreground hover:text-foreground transition-colors block text-left">
                     <strong className="text-foreground">WhatsApp/Main:</strong> {DEFAULT_PHONE_DISPLAY}
-                  </a>
-                  <a href={`tel:${SECONDARY_PHONE_DISPLAY.replace(/\s+/g, '')}`} className="text-muted-foreground hover:text-foreground transition-colors block text-xs">
+                  </button>
+                  <button onClick={openPhoneModal} className="text-muted-foreground hover:text-foreground transition-colors block text-xs text-left">
                     <strong className="text-foreground">Dispatch Line 2:</strong> {SECONDARY_PHONE_DISPLAY}
-                  </a>
+                  </button>
                 </div>
               </div>
 
