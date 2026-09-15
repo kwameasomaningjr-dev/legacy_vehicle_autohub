@@ -139,34 +139,34 @@ export default function AdminDashboard() {
     <div className="min-h-screen pt-24 pb-16 space-y-8 transition-colors duration-300">
       
       {/* Top Admin Header Bar */}
-      <div className="bg-slate-200/80 dark:bg-gradient-to-b dark:from-dark-800 dark:to-dark-900 border-b border-slate-300 dark:border-white/5 py-8 transition-colors duration-300">
+      <div className="bg-card border-b border-border py-8 transition-colors duration-300">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-2xl overflow-hidden bg-white p-1 shadow-lg shadow-brand-500/20 border border-brand-500/30 shrink-0">
+            <div className="w-12 h-12 rounded-2xl overflow-hidden bg-card p-1 shadow-lg border border-primary/30 shrink-0">
               <img src="/logo-gold-navy.jpg" alt="Legacy Vehicle Hub Logo" className="w-full h-full object-contain" />
             </div>
             <div>
-              <div className="inline-flex items-center gap-1 text-[10px] font-bold text-brand-600 dark:text-brand-400 uppercase tracking-widest">
+              <div className="inline-flex items-center gap-1 text-[10px] font-bold text-primary uppercase tracking-widest">
                 <ShieldCheck className="w-3.5 h-3.5" />
                 <span>Authorized Admin Console</span>
               </div>
-              <h1 className="text-2xl font-black text-slate-900 dark:text-white">Legacy Vehicle Hub Dashboard</h1>
+              <h1 className="text-2xl font-black text-foreground">Legacy Vehicle Hub Dashboard</h1>
             </div>
           </div>
 
           <div className="flex items-center gap-3 self-start sm:self-auto">
             <Link
               to="/"
-              className="px-4 py-2 rounded-xl bg-white dark:bg-dark-800 hover:bg-slate-100 dark:hover:bg-dark-700 text-slate-800 dark:text-slate-200 text-xs font-semibold flex items-center gap-1.5 border border-slate-300 dark:border-white/10 shadow-sm"
+              className="px-4 py-2 rounded-xl bg-card hover:bg-muted text-foreground text-xs font-semibold flex items-center gap-1.5 border border-border shadow-sm transition-colors"
             >
-              <ExternalLink className="w-3.5 h-3.5 text-brand-600 dark:text-brand-400" />
+              <ExternalLink className="w-3.5 h-3.5 text-primary" />
               <span>Live Website View</span>
             </Link>
 
             <button
               onClick={handleLogout}
-              className="px-4 py-2 rounded-xl bg-red-500/10 hover:bg-red-500/20 text-red-600 dark:text-red-400 text-xs font-bold flex items-center gap-1.5 border border-red-500/20 transition-colors"
+              className="px-4 py-2 rounded-xl bg-destructive/10 hover:bg-destructive/20 text-destructive text-xs font-bold flex items-center gap-1.5 border border-destructive/20 transition-colors"
             >
               <LogOut className="w-3.5 h-3.5" />
               <span>Logout</span>
@@ -181,54 +181,54 @@ export default function AdminDashboard() {
         {/* KPI Metrics Row */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-xs">
           
-          <div className="glass-card p-4 rounded-2xl border border-slate-200 dark:border-white/10 bg-white dark:bg-dark-800/80 space-y-1 shadow-md">
-            <div className="flex items-center justify-between text-slate-500 dark:text-slate-400">
+          <div className="glass-card p-4 rounded-2xl border border-border bg-card text-card-foreground space-y-1 shadow-md">
+            <div className="flex items-center justify-between text-muted-foreground">
               <span>Total Fleet Vehicles</span>
-              <Car className="w-4 h-4 text-brand-600 dark:text-brand-400" />
+              <Car className="w-4 h-4 text-primary" />
             </div>
-            <span className="text-2xl font-black text-slate-900 dark:text-white block">{totalFleet}</span>
-            <span className="text-[10px] text-slate-500 dark:text-slate-400">Active catalog items</span>
+            <span className="text-2xl font-black text-foreground block">{totalFleet}</span>
+            <span className="text-[10px] text-muted-foreground">Active catalog items</span>
           </div>
 
-          <div className="glass-card p-4 rounded-2xl border border-slate-200 dark:border-white/10 bg-white dark:bg-dark-800/80 space-y-1 shadow-md">
-            <div className="flex items-center justify-between text-slate-500 dark:text-slate-400">
+          <div className="glass-card p-4 rounded-2xl border border-border bg-card text-card-foreground space-y-1 shadow-md">
+            <div className="flex items-center justify-between text-muted-foreground">
               <span>Available Vehicles</span>
-              <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+              <CheckCircle2 className="w-4 h-4 text-emerald-500" />
             </div>
-            <span className="text-2xl font-black text-emerald-600 dark:text-emerald-400 block">{availableFleet}</span>
-            <span className="text-[10px] text-slate-500 dark:text-slate-400">Ready for instant dispatch</span>
+            <span className="text-2xl font-black text-emerald-500 block">{availableFleet}</span>
+            <span className="text-[10px] text-muted-foreground">Ready for instant dispatch</span>
           </div>
 
-          <div className="glass-card p-4 rounded-2xl border border-slate-200 dark:border-white/10 bg-white dark:bg-dark-800/80 space-y-1 shadow-md">
-            <div className="flex items-center justify-between text-slate-500 dark:text-slate-400">
+          <div className="glass-card p-4 rounded-2xl border border-border bg-card text-card-foreground space-y-1 shadow-md">
+            <div className="flex items-center justify-between text-muted-foreground">
               <span>Average Daily Rates</span>
-              <DollarSign className="w-4 h-4 text-brand-600 dark:text-brand-400" />
+              <DollarSign className="w-4 h-4 text-primary" />
             </div>
             <div className="flex items-baseline gap-2">
-              <span className="text-lg font-black text-slate-900 dark:text-white">GH₵ {avgInsideAccra.toLocaleString()}</span>
-              <span className="text-[10px] text-slate-500 dark:text-slate-400">Accra</span>
+              <span className="text-lg font-black text-foreground">GH₵ {avgInsideAccra.toLocaleString()}</span>
+              <span className="text-[10px] text-muted-foreground">Accra</span>
             </div>
-            <span className="text-[10px] text-brand-600 dark:text-brand-400 block font-medium">Outside: GH₵ {avgOutsideAccra.toLocaleString()}</span>
+            <span className="text-[10px] text-primary block font-medium">Outside: GH₵ {avgOutsideAccra.toLocaleString()}</span>
           </div>
 
-          <div className="glass-card p-4 rounded-2xl border border-slate-200 dark:border-white/10 bg-white dark:bg-dark-800/80 space-y-1 shadow-md">
-            <div className="flex items-center justify-between text-slate-500 dark:text-slate-400">
+          <div className="glass-card p-4 rounded-2xl border border-border bg-card text-card-foreground space-y-1 shadow-md">
+            <div className="flex items-center justify-between text-muted-foreground">
               <span>Booking Inquiries</span>
-              <MessageSquare className="w-4 h-4 text-brand-600 dark:text-brand-400" />
+              <MessageSquare className="w-4 h-4 text-primary" />
             </div>
-            <span className="text-2xl font-black text-slate-900 dark:text-white block">{inquiries.length}</span>
-            <span className="text-[10px] text-slate-500 dark:text-slate-400">Logged client requests</span>
+            <span className="text-2xl font-black text-foreground block">{inquiries.length}</span>
+            <span className="text-[10px] text-muted-foreground">Logged client requests</span>
           </div>
 
         </div>
 
         {/* Tab Navigation */}
-        <div className="flex items-center justify-between gap-4 border-b border-slate-200 dark:border-white/10 pb-4 overflow-x-auto">
+        <div className="flex items-center justify-between gap-4 border-b border-border pb-4 overflow-x-auto">
           <div className="flex items-center gap-2 shrink-0">
             <button
               onClick={() => setActiveTab('fleet')}
               className={`px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition-all ${
-                activeTab === 'fleet' ? 'bg-brand-500 text-slate-950 shadow-md' : 'bg-white dark:bg-dark-800 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white border border-slate-300 dark:border-white/5'
+                activeTab === 'fleet' ? 'bg-primary text-primary-foreground shadow-md' : 'bg-card text-foreground hover:bg-muted border border-border'
               }`}
             >
               <Car className="w-4 h-4" />
@@ -238,7 +238,7 @@ export default function AdminDashboard() {
             <button
               onClick={() => setActiveTab('rates')}
               className={`px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition-all ${
-                activeTab === 'rates' ? 'bg-brand-500 text-slate-950 shadow-md' : 'bg-white dark:bg-dark-800 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white border border-slate-300 dark:border-white/5'
+                activeTab === 'rates' ? 'bg-primary text-primary-foreground shadow-md' : 'bg-card text-foreground hover:bg-muted border border-border'
               }`}
             >
               <DollarSign className="w-4 h-4" />
@@ -248,7 +248,7 @@ export default function AdminDashboard() {
             <button
               onClick={() => setActiveTab('inquiries')}
               className={`px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition-all ${
-                activeTab === 'inquiries' ? 'bg-brand-500 text-slate-950 shadow-md' : 'bg-white dark:bg-dark-800 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white border border-slate-300 dark:border-white/5'
+                activeTab === 'inquiries' ? 'bg-primary text-primary-foreground shadow-md' : 'bg-card text-foreground hover:bg-muted border border-border'
               }`}
             >
               <MessageSquare className="w-4 h-4" />
@@ -258,7 +258,7 @@ export default function AdminDashboard() {
             <button
               onClick={() => setActiveTab('settings')}
               className={`px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition-all ${
-                activeTab === 'settings' ? 'bg-brand-500 text-slate-950 shadow-md' : 'bg-white dark:bg-dark-800 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white border border-slate-300 dark:border-white/5'
+                activeTab === 'settings' ? 'bg-primary text-primary-foreground shadow-md' : 'bg-card text-foreground hover:bg-muted border border-border'
               }`}
             >
               <FileSpreadsheet className="w-4 h-4" />
@@ -268,7 +268,7 @@ export default function AdminDashboard() {
 
           <button
             onClick={() => setIsAddModalOpen(true)}
-            className="px-4 py-2 rounded-xl bg-gradient-to-r from-brand-500 to-amber-600 hover:from-brand-400 hover:to-amber-500 text-slate-950 font-black text-xs flex items-center gap-1.5 shadow-lg shadow-brand-500/20 shrink-0"
+            className="px-4 py-2 rounded-xl bg-primary hover:opacity-90 text-primary-foreground font-black text-xs flex items-center gap-1.5 shadow-lg shrink-0 transition-transform active:scale-95"
           >
             <Plus className="w-4 h-4 stroke-[3]" />
             <span>Add New Car</span>
@@ -277,25 +277,25 @@ export default function AdminDashboard() {
 
         {/* TAB 1: FLEET CATALOG TABLE */}
         {activeTab === 'fleet' && (
-          <div className="glass-card rounded-3xl border border-slate-200 dark:border-white/10 bg-white dark:bg-dark-800/90 overflow-hidden shadow-2xl transition-colors duration-300">
-            <div className="p-4 border-b border-slate-200 dark:border-white/10 flex items-center justify-between">
-              <h2 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider">Fleet Vehicle Directory</h2>
+          <div className="glass-card rounded-3xl border border-border bg-card text-card-foreground overflow-hidden shadow-2xl transition-colors duration-300">
+            <div className="p-4 border-b border-border flex items-center justify-between">
+              <h2 className="text-sm font-bold text-foreground uppercase tracking-wider">Fleet Vehicle Directory</h2>
               <div className="flex items-center gap-3">
                 <button
                   onClick={exportFleetCSV}
-                  className="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-dark-700 dark:hover:bg-dark-600 text-slate-800 dark:text-slate-200 border border-slate-300 dark:border-white/10 text-xs font-bold flex items-center gap-1.5"
+                  className="px-3 py-1.5 rounded-lg bg-muted hover:bg-muted/80 text-foreground border border-border text-xs font-bold flex items-center gap-1.5 transition-colors"
                   title="Download Fleet Catalog as CSV"
                 >
-                  <Download className="w-3.5 h-3.5 text-brand-600 dark:text-brand-400" />
+                  <Download className="w-3.5 h-3.5 text-primary" />
                   <span>Export Fleet CSV</span>
                 </button>
-                <span className="text-xs text-slate-500 dark:text-slate-400">Total: {cars.length} Vehicles</span>
+                <span className="text-xs text-muted-foreground">Total: {cars.length} Vehicles</span>
               </div>
             </div>
 
             <div className="overflow-x-auto">
-              <table className="w-full text-left text-xs text-slate-700 dark:text-slate-300">
-                <thead className="bg-slate-100 dark:bg-dark-900/90 text-slate-700 dark:text-slate-400 font-semibold border-b border-slate-300 dark:border-white/10 uppercase tracking-wider text-[10px]">
+              <table className="w-full text-left text-xs text-muted-foreground">
+                <thead className="bg-muted text-foreground font-semibold border-b border-border uppercase tracking-wider text-[10px]">
                   <tr>
                     <th className="p-3.5">Vehicle</th>
                     <th className="p-3.5">Specs</th>
@@ -306,33 +306,33 @@ export default function AdminDashboard() {
                     <th className="p-3.5 text-right">Actions</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-200 dark:divide-white/5">
+                <tbody className="divide-y divide-border">
                   {cars.map((car) => (
-                    <tr key={car.id} className="hover:bg-slate-100/70 dark:hover:bg-white/5 transition-colors">
+                    <tr key={car.id} className="hover:bg-muted/50 transition-colors">
                       <td className="p-3.5">
                         <div className="flex items-center gap-3">
                           <img
                             src={car.images[0]}
                             alt={car.name}
-                            className="w-12 h-12 rounded-xl object-cover border border-slate-300 dark:border-white/10 shrink-0 bg-slate-200 dark:bg-dark-900"
+                            className="w-12 h-12 rounded-xl object-cover border border-border shrink-0 bg-muted"
                           />
                           <div>
-                            <span className="font-bold text-slate-900 dark:text-white block text-sm">{car.name}</span>
-                            <span className="text-[11px] text-slate-500 dark:text-slate-400">{car.year} Model • {car.category}</span>
+                            <span className="font-bold text-foreground block text-sm">{car.name}</span>
+                            <span className="text-[11px] text-muted-foreground">{car.year} Model • {car.category}</span>
                           </div>
                         </div>
                       </td>
 
                       <td className="p-3.5">
-                        <span className="block font-semibold text-slate-800 dark:text-slate-200">{car.transmission}</span>
-                        <span className="text-[11px] text-slate-500 dark:text-slate-400">{car.seats} Seats • {car.fuelType}</span>
+                        <span className="block font-semibold text-foreground">{car.transmission}</span>
+                        <span className="text-[11px] text-muted-foreground">{car.seats} Seats • {car.fuelType}</span>
                       </td>
 
-                      <td className="p-3.5 font-bold text-slate-900 dark:text-white">
+                      <td className="p-3.5 font-bold text-foreground">
                         GH₵ {car.rateInsideAccra?.toLocaleString() || '-'} / day
                       </td>
 
-                      <td className="p-3.5 font-bold text-brand-600 dark:text-brand-400">
+                      <td className="p-3.5 font-bold text-primary">
                         GH₵ {car.rateOutsideAccra?.toLocaleString() || '-'} / day
                       </td>
 
@@ -341,8 +341,8 @@ export default function AdminDashboard() {
                           onClick={() => updateCar(car.id, { isAvailable: !car.isAvailable })}
                           className={`px-2.5 py-1 rounded-full text-[10px] font-bold border transition-colors ${
                             car.isAvailable !== false
-                              ? 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-500/30'
-                              : 'bg-red-500/10 text-red-700 dark:text-red-400 border-red-500/30'
+                              ? 'bg-emerald-500/10 text-emerald-600 border-emerald-500/30'
+                              : 'bg-destructive/10 text-destructive border-destructive/30'
                           }`}
                         >
                           {car.isAvailable !== false ? 'Available' : 'Booked Out'}
@@ -354,8 +354,8 @@ export default function AdminDashboard() {
                           onClick={() => updateCar(car.id, { featured: !car.featured })}
                           className={`px-2.5 py-1 rounded-full text-[10px] font-bold border transition-colors ${
                             car.featured
-                              ? 'bg-brand-500/20 text-brand-700 dark:text-brand-400 border-brand-500/30'
-                              : 'bg-slate-100 dark:bg-dark-900 text-slate-500 border-slate-300 dark:border-slate-700'
+                              ? 'bg-secondary text-secondary-foreground border-secondary'
+                              : 'bg-muted text-muted-foreground border-border'
                           }`}
                         >
                           {car.featured ? 'Featured' : 'Standard'}
@@ -365,10 +365,10 @@ export default function AdminDashboard() {
                       <td className="p-3.5 text-right space-x-2">
                         <button
                           onClick={() => setEditingCar(car)}
-                          className="p-2 rounded-lg bg-slate-100 dark:bg-dark-700 hover:bg-slate-200 dark:hover:bg-dark-600 text-slate-700 dark:text-slate-200 border border-slate-300 dark:border-white/10"
+                          className="p-2 rounded-lg bg-muted hover:bg-muted/80 text-foreground border border-border transition-colors"
                           title="Edit Specs & Rates"
                         >
-                          <Edit3 className="w-4 h-4 text-brand-600 dark:text-brand-400" />
+                          <Edit3 className="w-4 h-4 text-primary" />
                         </button>
 
                         <button
@@ -377,7 +377,7 @@ export default function AdminDashboard() {
                               deleteCar(car.id);
                             }
                           }}
-                          className="p-2 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-600 dark:text-red-400 border border-red-500/20"
+                          className="p-2 rounded-lg bg-destructive/10 hover:bg-destructive/20 text-destructive border border-destructive/20 transition-colors"
                           title="Delete Vehicle"
                         >
                           <Trash2 className="w-4 h-4" />
@@ -393,43 +393,43 @@ export default function AdminDashboard() {
 
         {/* TAB 2: QUICK RATE EDITOR */}
         {activeTab === 'rates' && (
-          <div className="glass-card p-6 rounded-3xl border border-slate-200 dark:border-white/10 bg-white dark:bg-dark-800/90 space-y-6 shadow-2xl transition-colors duration-300">
+          <div className="glass-card p-6 rounded-3xl border border-border bg-card text-card-foreground space-y-6 shadow-2xl transition-colors duration-300">
             <div>
-              <h2 className="text-base font-bold text-slate-900 dark:text-white uppercase tracking-wider">Quick Rates Management Matrix</h2>
-              <p className="text-xs text-slate-600 dark:text-slate-400 mt-1">Adjust daily prices inside and outside Greater Accra directly in real time.</p>
+              <h2 className="text-base font-bold text-foreground uppercase tracking-wider">Quick Rates Management Matrix</h2>
+              <p className="text-xs text-muted-foreground mt-1">Adjust daily prices inside and outside Greater Accra directly in real time.</p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {cars.map((car) => (
-                <div key={car.id} className="bg-slate-50 dark:bg-dark-900 p-4 rounded-2xl border border-slate-200 dark:border-white/5 space-y-3">
+                <div key={car.id} className="bg-muted p-4 rounded-2xl border border-border space-y-3">
                   <div className="flex items-center gap-3">
-                    <img src={car.images[0]} alt={car.name} className="w-10 h-10 rounded-lg object-cover border border-slate-200 dark:border-white/10" />
+                    <img src={car.images[0]} alt={car.name} className="w-10 h-10 rounded-lg object-cover border border-border" />
                     <div>
-                      <h4 className="font-bold text-slate-900 dark:text-white text-sm">{car.name}</h4>
-                      <span className="text-[10px] text-slate-500 dark:text-slate-400">{car.category} • {car.transmission}</span>
+                      <h4 className="font-bold text-foreground text-sm">{car.name}</h4>
+                      <span className="text-[10px] text-muted-foreground">{car.category} • {car.transmission}</span>
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-3 pt-2 border-t border-slate-200 dark:border-white/5 text-xs">
+                  <div className="grid grid-cols-2 gap-3 pt-2 border-t border-border text-xs">
                     <div>
-                      <label className="text-slate-600 dark:text-slate-400 block text-[10px] font-semibold uppercase mb-1">Rate Inside Accra (GH₵)</label>
+                      <label className="text-muted-foreground block text-[10px] font-semibold uppercase mb-1">Rate Inside Accra (GH₵)</label>
                       <input
                         type="number"
                         step="50"
                         value={car.rateInsideAccra}
                         onChange={(e) => updateCar(car.id, { rateInsideAccra: e.target.value })}
-                        className="w-full bg-white dark:bg-dark-800 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-1.5 text-xs text-slate-900 dark:text-white font-bold focus:outline-none focus:border-brand-500"
+                        className="w-full bg-background border border-input rounded-xl px-3 py-1.5 text-xs text-foreground font-bold focus:outline-none focus:border-ring"
                       />
                     </div>
 
                     <div>
-                      <label className="text-brand-600 dark:text-brand-400 block text-[10px] font-semibold uppercase mb-1">Rate Outside Accra (GH₵)</label>
+                      <label className="text-primary block text-[10px] font-semibold uppercase mb-1">Rate Outside Accra (GH₵)</label>
                       <input
                         type="number"
                         step="50"
                         value={car.rateOutsideAccra}
                         onChange={(e) => updateCar(car.id, { rateOutsideAccra: e.target.value })}
-                        className="w-full bg-white dark:bg-dark-800 border border-brand-500/40 rounded-xl px-3 py-1.5 text-xs text-slate-900 dark:text-white font-bold focus:outline-none focus:border-brand-500"
+                        className="w-full bg-background border border-primary/40 rounded-xl px-3 py-1.5 text-xs text-foreground font-bold focus:outline-none focus:border-ring"
                       />
                     </div>
                   </div>
@@ -441,16 +441,16 @@ export default function AdminDashboard() {
 
         {/* TAB 3: INQUIRY LOGS */}
         {activeTab === 'inquiries' && (
-          <div className="glass-card rounded-3xl border border-slate-200 dark:border-white/10 bg-white dark:bg-dark-800/90 overflow-hidden shadow-2xl transition-colors duration-300">
-            <div className="p-4 border-b border-slate-200 dark:border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div className="glass-card rounded-3xl border border-border bg-card text-card-foreground overflow-hidden shadow-2xl transition-colors duration-300">
+            <div className="p-4 border-b border-border flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div>
-                <h2 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider">Customer Booking Inquiry History</h2>
-                <p className="text-[11px] text-slate-500 dark:text-slate-400">Total Logged: {inquiries.length} inquiries</p>
+                <h2 className="text-sm font-bold text-foreground uppercase tracking-wider">Customer Booking Inquiry History</h2>
+                <p className="text-[11px] text-muted-foreground">Total Logged: {inquiries.length} inquiries</p>
               </div>
 
               <button
                 onClick={exportInquiriesCSV}
-                className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-md shadow-emerald-600/20 transition-all self-start sm:self-auto"
+                className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-md transition-all self-start sm:self-auto"
               >
                 <FileSpreadsheet className="w-4 h-4" />
                 <span>Export Inquiries to CSV / Excel</span>
@@ -459,8 +459,8 @@ export default function AdminDashboard() {
 
             {inquiries.length > 0 ? (
               <div className="overflow-x-auto">
-                <table className="w-full text-left text-xs text-slate-700 dark:text-slate-300">
-                  <thead className="bg-slate-100 dark:bg-dark-900/90 text-slate-700 dark:text-slate-400 font-semibold border-b border-slate-300 dark:border-white/10 uppercase tracking-wider text-[10px]">
+                <table className="w-full text-left text-xs text-muted-foreground">
+                  <thead className="bg-muted text-foreground font-semibold border-b border-border uppercase tracking-wider text-[10px]">
                     <tr>
                       <th className="p-3.5">Date</th>
                       <th className="p-3.5">Customer</th>
@@ -471,25 +471,25 @@ export default function AdminDashboard() {
                       <th className="p-3.5">Action</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-200 dark:divide-white/5">
+                  <tbody className="divide-y divide-border">
                     {inquiries.map((inq) => (
-                      <tr key={inq.id} className="hover:bg-slate-100/70 dark:hover:bg-white/5 transition-colors">
-                        <td className="p-3.5 text-slate-500 dark:text-slate-400">{inq.date}</td>
+                      <tr key={inq.id} className="hover:bg-muted/50 transition-colors">
+                        <td className="p-3.5 text-muted-foreground">{inq.date}</td>
                         <td className="p-3.5">
-                          <strong className="text-slate-900 dark:text-white block">{inq.customerName}</strong>
+                          <strong className="text-foreground block">{inq.customerName}</strong>
                           <a href={`tel:${inq.phone}`} className="text-[11px] text-emerald-600 dark:text-emerald-400 hover:underline">{inq.phone}</a>
-                          {inq.email && <span className="text-[10px] text-slate-500 dark:text-slate-400 block">{inq.email}</span>}
+                          {inq.email && <span className="text-[10px] text-muted-foreground block">{inq.email}</span>}
                         </td>
-                        <td className="p-3.5 font-bold text-slate-900 dark:text-white">{inq.carName}</td>
-                        <td className="p-3.5 font-semibold text-brand-600 dark:text-brand-400">{inq.travelScope}</td>
-                        <td className="p-3.5 text-[11px] text-slate-500 dark:text-slate-400">
+                        <td className="p-3.5 font-bold text-foreground">{inq.carName}</td>
+                        <td className="p-3.5 font-semibold text-primary">{inq.travelScope}</td>
+                        <td className="p-3.5 text-[11px] text-muted-foreground">
                           {inq.pickupDate || 'Flexible'} to {inq.returnDate || 'Flexible'}
                         </td>
-                        <td className="p-3.5 font-bold text-slate-900 dark:text-white">{inq.estimatedRate || '-'}</td>
+                        <td className="p-3.5 font-bold text-foreground">{inq.estimatedRate || '-'}</td>
                         <td className="p-3.5">
                           <button
                             onClick={() => deleteInquiry(inq.id)}
-                            className="p-1.5 rounded bg-red-500/10 text-red-600 dark:text-red-400 hover:bg-red-500/20"
+                            className="p-1.5 rounded bg-destructive/10 text-destructive hover:bg-destructive/20 transition-colors"
                             title="Remove log"
                           >
                             <Trash2 className="w-3.5 h-3.5" />
@@ -501,17 +501,17 @@ export default function AdminDashboard() {
                 </table>
               </div>
             ) : (
-              <div className="p-8 text-center text-slate-500 dark:text-slate-400 text-xs">No inquiries logged yet.</div>
+              <div className="p-8 text-center text-muted-foreground text-xs">No inquiries logged yet.</div>
             )}
           </div>
         )}
 
         {/* TAB 4: EXPORT & REPORTS */}
         {activeTab === 'settings' && (
-          <div className="glass-card p-6 sm:p-8 rounded-3xl border border-slate-200 dark:border-white/10 bg-white dark:bg-dark-800/90 space-y-6 shadow-2xl max-w-2xl mx-auto transition-colors duration-300">
+          <div className="glass-card p-6 sm:p-8 rounded-3xl border border-border bg-card text-card-foreground space-y-6 shadow-2xl max-w-2xl mx-auto transition-colors duration-300">
             <div>
-              <h2 className="text-base font-bold text-slate-900 dark:text-white uppercase tracking-wider">Export Data & Reports</h2>
-              <p className="text-xs text-slate-600 dark:text-slate-400 mt-1">Download CSV reports formatted for Excel/Google Sheets or export JSON developer backups.</p>
+              <h2 className="text-base font-bold text-foreground uppercase tracking-wider">Export Data & Reports</h2>
+              <p className="text-xs text-muted-foreground mt-1">Download CSV reports formatted for Excel/Google Sheets or export JSON developer backups.</p>
             </div>
 
             <div className="space-y-4">
@@ -519,7 +519,7 @@ export default function AdminDashboard() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <button
                   onClick={exportInquiriesCSV}
-                  className="py-3.5 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-xs flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/20 transition-all hover:scale-[1.02]"
+                  className="py-3.5 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-xs flex items-center justify-center gap-2 shadow-lg transition-all hover:scale-[1.02]"
                 >
                   <FileSpreadsheet className="w-4 h-4" />
                   <span>Export Inquiries (CSV / Excel)</span>
@@ -527,7 +527,7 @@ export default function AdminDashboard() {
 
                 <button
                   onClick={exportFleetCSV}
-                  className="py-3.5 px-4 rounded-xl bg-brand-500 hover:bg-brand-400 text-slate-950 font-extrabold text-xs flex items-center justify-center gap-2 shadow-lg shadow-brand-500/20 transition-all hover:scale-[1.02]"
+                  className="py-3.5 px-4 rounded-xl bg-primary hover:opacity-90 text-primary-foreground font-extrabold text-xs flex items-center justify-center gap-2 shadow-lg transition-all hover:scale-[1.02]"
                 >
                   <Download className="w-4 h-4" />
                   <span>Export Fleet Catalog (CSV)</span>
@@ -535,12 +535,12 @@ export default function AdminDashboard() {
               </div>
 
               {/* Developer JSON Copy */}
-              <div className="pt-4 border-t border-slate-200 dark:border-white/10 space-y-2">
-                <h4 className="text-xs font-bold text-slate-900 dark:text-white">Developer Catalog Backup (JSON)</h4>
-                <p className="text-[11px] text-slate-600 dark:text-slate-400">Copy raw JSON code to update static defaults in <code className="text-brand-600 dark:text-brand-400 bg-slate-100 dark:bg-dark-900 px-1 py-0.5 rounded">src/data/cars.js</code>.</p>
+              <div className="pt-4 border-t border-border space-y-2">
+                <h4 className="text-xs font-bold text-foreground">Developer Catalog Backup (JSON)</h4>
+                <p className="text-[11px] text-muted-foreground">Copy raw JSON code to update static defaults in <code className="text-primary bg-muted px-1 py-0.5 rounded">src/data/cars.js</code>.</p>
                 <button
                   onClick={handleCopyJSON}
-                  className="w-full py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-dark-700 dark:hover:bg-dark-600 text-slate-800 dark:text-slate-200 font-bold text-xs flex items-center justify-center gap-2 border border-slate-300 dark:border-white/10"
+                  className="w-full py-2.5 rounded-xl bg-muted hover:bg-muted/80 text-foreground font-bold text-xs flex items-center justify-center gap-2 border border-border transition-colors"
                 >
                   <Copy className="w-4 h-4" />
                   <span>Copy Catalog JSON Code</span>
@@ -551,16 +551,16 @@ export default function AdminDashboard() {
               </div>
 
               {/* Reset Catalog */}
-              <div className="pt-4 border-t border-slate-200 dark:border-white/10 space-y-2">
-                <h4 className="text-xs font-bold text-slate-900 dark:text-white">Reset Catalog to Fixtures</h4>
-                <p className="text-[11px] text-slate-600 dark:text-slate-400">Restores catalog to the original static 8 vehicles fixture.</p>
+              <div className="pt-4 border-t border-border space-y-2">
+                <h4 className="text-xs font-bold text-foreground">Reset Catalog to Fixtures</h4>
+                <p className="text-[11px] text-muted-foreground">Restores catalog to the original static 8 vehicles fixture.</p>
                 <button
                   onClick={() => {
                     if (window.confirm('Reset catalog back to initial 8 vehicles?')) {
                       resetCatalogToDefault();
                     }
                   }}
-                  className="px-4 py-2 rounded-xl bg-red-500/10 hover:bg-red-500/20 text-red-600 dark:text-red-400 border border-red-500/20 text-xs font-semibold flex items-center gap-2"
+                  className="px-4 py-2 rounded-xl bg-destructive/10 hover:bg-destructive/20 text-destructive border border-destructive/20 text-xs font-semibold flex items-center gap-2 transition-colors"
                 >
                   <RotateCcw className="w-3.5 h-3.5" />
                   <span>Reset Catalog</span>

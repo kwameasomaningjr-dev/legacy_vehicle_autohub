@@ -27,7 +27,7 @@ export default function App() {
 
   return (
     <ThemeProvider>
-      <div className="flex flex-col min-h-screen bg-slate-100 dark:bg-dark-900 text-slate-900 dark:text-slate-100 font-sans transition-colors duration-300">
+      <div className="flex flex-col min-h-screen bg-background text-foreground font-sans transition-colors duration-300">
         <ScrollToTop />
         
         {/* Sticky Header Nav */}

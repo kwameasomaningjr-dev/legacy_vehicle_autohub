@@ -40,42 +40,37 @@ export default function Navbar() {
   const isActive = (path) => location.pathname === path;
 
   return (
-    <header className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${scrolled ? 'glass-nav py-2.5 shadow-md dark:shadow-xl' : 'bg-white/90 dark:bg-dark-900/90 backdrop-blur-md py-3.5 border-b border-slate-200 dark:border-white/5'}`}>
+    <header className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${scrolled ? 'glass-nav py-2.5 shadow-md' : 'bg-card/90 backdrop-blur-md py-3.5 border-b border-border'}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between">
           
           {/* Brand Logo Image */}
           <Link to="/" className="flex items-center gap-3 group shrink-0">
-            <div className="relative w-11 h-11 sm:w-12 sm:h-12 rounded-xl overflow-hidden bg-white p-1 shadow-md dark:shadow-lg dark:shadow-brand-500/20 group-hover:scale-105 transition-transform border border-brand-500/30">
+            <div className="relative w-10 h-10 sm:w-11 sm:h-11 rounded-xl overflow-hidden group-hover:scale-105 transition-transform flex items-center justify-center p-0.5">
               <img
                 src="/logo-gold-navy.jpg"
                 alt="Legacy Vehicle Hub Logo"
-                className="w-full h-full object-contain"
+                className="w-full h-full object-contain mix-blend-multiply dark:mix-blend-screen rounded-lg"
               />
             </div>
             <div>
-              <div className="flex items-center gap-1.5">
-                <span className="font-extrabold text-lg sm:text-xl tracking-tight text-slate-900 dark:text-white group-hover:text-brand-500 transition-colors">
-                  LEGACY
-                </span>
-                <span className="font-bold text-[10px] tracking-widest px-1.5 py-0.5 rounded bg-brand-500/10 dark:bg-brand-500/20 text-brand-600 dark:text-brand-400 border border-brand-500/30 uppercase">
-                  Ghana
-                </span>
-              </div>
-              <p className="text-[10px] text-slate-500 dark:text-slate-400 font-bold tracking-widest uppercase">VEHICLE HUB</p>
+              <span className="font-extrabold text-lg sm:text-xl tracking-tight text-foreground group-hover:text-primary transition-colors block leading-none">
+                LEGACY
+              </span>
+              <p className="text-[10px] text-muted-foreground font-bold tracking-widest uppercase mt-0.5">VEHICLE HUB</p>
             </div>
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center gap-1 bg-slate-100/90 dark:bg-dark-800/80 p-1.5 rounded-full border border-slate-200 dark:border-white/10 shadow-inner">
+          <nav className="hidden lg:flex items-center gap-1 bg-muted/80 p-1.5 rounded-full border border-border shadow-inner">
             {navLinks.map((link) => (
               <Link
                 key={link.path}
                 to={link.path}
-                className={`px-3.5 py-1.5 rounded-full text-xs sm:text-sm font-semibold transition-all ${
+                className={`whitespace-nowrap px-3.5 py-1.5 rounded-full text-xs font-bold transition-all ${
                   isActive(link.path)
-                    ? 'bg-brand-500 text-slate-950 font-bold shadow-md'
-                    : 'text-slate-700 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white hover:bg-slate-200/60 dark:hover:bg-white/5'
+                    ? 'bg-primary text-primary-foreground shadow-md'
+                    : 'text-foreground hover:bg-card/80 hover:text-primary'
                 }`}
               >
                 {link.name}
@@ -84,52 +79,46 @@ export default function Navbar() {
           </nav>
 
           {/* CTA Buttons & Theme Toggle */}
-          <div className="hidden lg:flex items-center gap-2.5">
+          <div className="hidden lg:flex items-center gap-2">
             {/* Admin Portal Lock Icon Button */}
             <Link
               to={isAdminAuthenticated ? '/admin' : '/admin/login'}
-              className="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-dark-800 dark:hover:bg-dark-700 text-slate-700 dark:text-slate-300 hover:text-brand-500 dark:hover:text-brand-400 border border-slate-300 dark:border-slate-700 transition-colors"
+              className="p-2 rounded-xl bg-muted hover:bg-card text-foreground hover:text-primary border border-border transition-colors shrink-0"
               title={isAdminAuthenticated ? 'Admin Dashboard' : 'Admin Portal Login'}
             >
               <Lock className="w-4 h-4" />
             </Link>
 
-            {/* Dark / Light Mode Toggle Button */}
+            {/* Dark / Light Mode Toggle Button (Icon Only) */}
             <button
               onClick={toggleTheme}
               aria-label="Toggle Theme"
-              className="flex items-center gap-2 p-2 sm:px-3 sm:py-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-dark-800 dark:hover:bg-dark-700 text-slate-700 dark:text-slate-200 border border-slate-300 dark:border-slate-700 text-xs font-semibold transition-all hover:scale-105"
+              className="p-2 rounded-xl bg-muted hover:bg-card text-foreground border border-border transition-all hover:scale-105 shrink-0"
               title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
             >
               {theme === 'dark' ? (
-                <>
-                  <Sun className="w-4 h-4 text-amber-400 animate-pulse" />
-                  <span className="hidden xl:inline">Light</span>
-                </>
+                <Sun className="w-4 h-4 text-secondary animate-pulse" />
               ) : (
-                <>
-                  <Moon className="w-4 h-4 text-slate-700" />
-                  <span className="hidden xl:inline">Dark</span>
-                </>
+                <Moon className="w-4 h-4 text-primary" />
               )}
             </button>
 
             <a
               href={`tel:${DEFAULT_PHONE_DISPLAY.replace(/\s+/g, '')}`}
-              className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-dark-800 dark:hover:bg-dark-700 text-slate-800 dark:text-slate-200 border border-slate-300 dark:border-slate-700 text-xs font-semibold transition-colors"
+              className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-muted hover:bg-card text-foreground border border-border text-xs font-semibold whitespace-nowrap transition-colors shrink-0"
             >
-              <Phone className="w-4 h-4 text-brand-500" />
-              <span className="hidden xl:inline">{DEFAULT_PHONE_DISPLAY}</span>
+              <Phone className="w-3.5 h-3.5 text-secondary" />
+              <span className="hidden xl:inline whitespace-nowrap">{DEFAULT_PHONE_DISPLAY}</span>
             </a>
 
             <a
               href={buildWhatsAppUrl(DEFAULT_WHATSAPP_NUMBER, generateGeneralInquiryMessage())}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold shadow-lg shadow-emerald-600/20 transition-all hover:scale-[1.02]"
+              className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-primary hover:opacity-90 text-primary-foreground text-xs font-bold whitespace-nowrap shadow-md transition-all hover:scale-[1.02] shrink-0"
             >
-              <MessageSquare className="w-4 h-4 fill-white/20" />
-              <span>WhatsApp Us</span>
+              <MessageSquare className="w-3.5 h-3.5" />
+              <span className="whitespace-nowrap">WhatsApp Us</span>
             </a>
           </div>
 
@@ -137,7 +126,7 @@ export default function Navbar() {
           <div className="flex lg:hidden items-center gap-2">
             <Link
               to={isAdminAuthenticated ? '/admin' : '/admin/login'}
-              className="p-2 rounded-lg bg-slate-100 dark:bg-dark-800 text-slate-700 dark:text-slate-300 border border-slate-300 dark:border-slate-700"
+              className="p-2 rounded-lg bg-muted text-foreground border border-border"
               title="Admin Portal"
             >
               <Lock className="w-4.5 h-4.5" />
@@ -147,22 +136,22 @@ export default function Navbar() {
             <button
               onClick={toggleTheme}
               aria-label="Toggle Theme"
-              className="p-2 rounded-lg bg-slate-100 dark:bg-dark-800 text-amber-500 dark:text-amber-400 border border-slate-300 dark:border-slate-700"
+              className="p-2 rounded-lg bg-muted text-secondary border border-border"
               title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
             >
-              {theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5 text-slate-700" />}
+              {theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5 text-primary" />}
             </button>
 
             <a
               href={`tel:${DEFAULT_PHONE_DISPLAY.replace(/\s+/g, '')}`}
-              className="p-2 rounded-lg bg-slate-100 dark:bg-dark-800 text-brand-500 border border-slate-300 dark:border-slate-700"
+              className="p-2 rounded-lg bg-muted text-secondary border border-border"
               aria-label="Call Us"
             >
               <Phone className="w-5 h-5" />
             </a>
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2 rounded-lg bg-slate-100 dark:bg-dark-800 text-slate-800 dark:text-slate-200 border border-slate-300 dark:border-slate-700 focus:outline-none"
+              className="p-2 rounded-lg bg-muted text-foreground border border-border focus:outline-none"
               aria-label="Toggle Navigation Menu"
             >
               {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -174,7 +163,7 @@ export default function Navbar() {
 
       {/* Mobile Menu Drawer */}
       {mobileMenuOpen && (
-        <div className="lg:hidden glass-nav border-b border-slate-200 dark:border-white/10 px-4 pt-3 pb-6 animate-in slide-in-from-top duration-200">
+        <div className="lg:hidden glass-nav border-b border-border px-4 pt-3 pb-6 animate-in slide-in-from-top duration-200">
           <div className="flex flex-col space-y-2">
             {navLinks.map((link) => (
               <Link
@@ -182,8 +171,8 @@ export default function Navbar() {
                 to={link.path}
                 className={`px-4 py-3 rounded-xl text-base font-medium flex items-center justify-between ${
                   isActive(link.path)
-                    ? 'bg-brand-500 text-slate-950 font-bold'
-                    : 'text-slate-800 dark:text-slate-200 hover:bg-slate-200/60 dark:hover:bg-white/5'
+                    ? 'bg-primary text-primary-foreground font-bold'
+                    : 'text-foreground hover:bg-muted'
                 }`}
               >
                 <span>{link.name}</span>
@@ -192,10 +181,10 @@ export default function Navbar() {
             ))}
           </div>
 
-          <div className="mt-4 pt-4 border-t border-slate-200 dark:border-slate-800 flex flex-col gap-2.5">
+          <div className="mt-4 pt-4 border-t border-border flex flex-col gap-2.5">
             <Link
               to={isAdminAuthenticated ? '/admin' : '/admin/login'}
-              className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl bg-slate-100 dark:bg-dark-800 text-brand-600 dark:text-brand-400 border border-brand-500/30 font-semibold text-xs"
+              className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl bg-muted text-foreground border border-border font-semibold text-xs"
             >
               <Lock className="w-4 h-4" />
               <span>{isAdminAuthenticated ? 'Admin Dashboard' : 'Admin Portal Login'}</span>
@@ -204,30 +193,30 @@ export default function Navbar() {
             {/* Theme toggle option inside mobile drawer */}
             <button
               onClick={toggleTheme}
-              className="flex items-center justify-between w-full px-4 py-3 rounded-xl bg-slate-100 dark:bg-dark-800 text-slate-800 dark:text-slate-200 border border-slate-300 dark:border-slate-700 font-semibold text-sm"
+              className="flex items-center justify-between w-full px-4 py-3 rounded-xl bg-muted text-foreground border border-border font-semibold text-sm"
             >
               <span className="flex items-center gap-2">
-                {theme === 'dark' ? <Sun className="w-5 h-5 text-amber-400" /> : <Moon className="w-5 h-5 text-slate-700" />}
+                {theme === 'dark' ? <Sun className="w-5 h-5 text-secondary" /> : <Moon className="w-5 h-5 text-primary" />}
                 Theme: {theme === 'dark' ? 'Dark Mode' : 'Light Mode'}
               </span>
-              <span className="text-xs px-2.5 py-1 rounded-full bg-brand-500/20 text-brand-600 dark:text-brand-400 border border-brand-500/30">
+              <span className="text-xs px-2.5 py-1 rounded-full bg-secondary/20 text-secondary-foreground border border-secondary/30">
                 Switch to {theme === 'dark' ? 'Light' : 'Dark'}
               </span>
             </button>
 
             <a
               href={`tel:${DEFAULT_PHONE_DISPLAY.replace(/\s+/g, '')}`}
-              className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl bg-slate-100 dark:bg-dark-800 text-slate-800 dark:text-slate-200 border border-slate-300 dark:border-slate-700 font-semibold text-xs"
+              className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl bg-muted text-foreground border border-border font-semibold text-xs"
             >
-              <Phone className="w-4 h-4 text-brand-500" />
+              <Phone className="w-4 h-4 text-secondary" />
               <span>Call Main Line: {DEFAULT_PHONE_DISPLAY}</span>
             </a>
 
             <a
               href={`tel:${SECONDARY_PHONE_DISPLAY.replace(/\s+/g, '')}`}
-              className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl bg-slate-100 dark:bg-dark-800 text-slate-800 dark:text-slate-200 border border-slate-300 dark:border-slate-700 font-semibold text-xs"
+              className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl bg-muted text-foreground border border-border font-semibold text-xs"
             >
-              <Phone className="w-4 h-4 text-brand-500" />
+              <Phone className="w-4 h-4 text-secondary" />
               <span>Call Line 2: {SECONDARY_PHONE_DISPLAY}</span>
             </a>
 
@@ -235,7 +224,7 @@ export default function Navbar() {
               href={buildWhatsAppUrl(DEFAULT_WHATSAPP_NUMBER, generateGeneralInquiryMessage())}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center justify-center gap-2 w-full py-3 rounded-xl bg-emerald-600 text-white font-bold text-xs shadow-lg shadow-emerald-600/30"
+              className="flex items-center justify-center gap-2 w-full py-3 rounded-xl bg-primary text-primary-foreground font-bold text-xs shadow-md"
             >
               <MessageSquare className="w-5 h-5" />
               <span>WhatsApp Us ({DEFAULT_PHONE_DISPLAY})</span>
