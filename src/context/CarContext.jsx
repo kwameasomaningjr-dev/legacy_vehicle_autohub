@@ -43,10 +43,12 @@ export function CarProvider({ children }) {
     }
   });
 
-  // 3. Admin Auth State
+  // 3. Admin Auth State - Requires login per session
   const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(() => {
     try {
-      return localStorage.getItem(AUTH_STORAGE_KEY) === 'true';
+      // Clear legacy persistent localStorage auth so user must login first
+      localStorage.removeItem(AUTH_STORAGE_KEY);
+      return sessionStorage.getItem(AUTH_STORAGE_KEY) === 'true';
     } catch (e) {
       return false;
     }
@@ -81,9 +83,10 @@ export function CarProvider({ children }) {
     if (inputUser === validUsername && inputPass === validPassword) {
       setIsAdminAuthenticated(true);
       try {
-        localStorage.setItem(AUTH_STORAGE_KEY, 'true');
+        sessionStorage.setItem(AUTH_STORAGE_KEY, 'true');
+        localStorage.removeItem(AUTH_STORAGE_KEY);
       } catch (e) {
-        console.error('Error saving auth to localStorage:', e);
+        console.error('Error saving auth to sessionStorage:', e);
       }
       return { success: true };
     }
@@ -97,9 +100,10 @@ export function CarProvider({ children }) {
   const logoutAdmin = () => {
     setIsAdminAuthenticated(false);
     try {
+      sessionStorage.removeItem(AUTH_STORAGE_KEY);
       localStorage.removeItem(AUTH_STORAGE_KEY);
     } catch (e) {
-      console.error('Error removing auth from localStorage:', e);
+      console.error('Error removing auth:', e);
     }
   };
 
