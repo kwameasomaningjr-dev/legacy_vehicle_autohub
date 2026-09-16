@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { ShieldCheck, LogOut, Plus, Edit3, Trash2, CheckCircle2, XCircle, Car, DollarSign, Users, Layers, MessageSquare, Copy, RotateCcw, ExternalLink, Sparkles, Filter, Sun, Moon, Download, FileSpreadsheet, Cloud, Key } from 'lucide-react';
+import { ShieldCheck, LogOut, Plus, Edit3, Trash2, CheckCircle2, XCircle, Car, DollarSign, Users, Layers, MessageSquare, Copy, RotateCcw, ExternalLink, Sparkles, Filter, Sun, Moon, Download, FileSpreadsheet, Cloud, Key, Fingerprint, ScanFace, Loader2, Settings } from 'lucide-react';
 import { useCars } from '../context/CarContext';
 import { useTheme } from '../context/ThemeContext';
 import { getCloudinaryConfig } from '../utils/cloudinary';
+import { isWebAuthnSupported, getRegisteredBiometricInfo, registerBiometricCredential, removeBiometricCredential } from '../utils/webauthn';
 import AdminCarModal from '../components/AdminCarModal';
 
 export default function AdminDashboard() {
@@ -26,6 +27,47 @@ export default function AdminDashboard() {
   const [editingCar, setEditingCar] = useState(null);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [copiedToast, setCopiedToast] = useState(false);
+
+  // WebAuthn state in Settings
+  const [bioSupported, setBioSupported] = useState(true);
+  const [bioInfo, setBioInfo] = useState(null);
+  const [bioLoading, setBioLoading] = useState(false);
+  const [bioMsg, setBioMsg] = useState({ type: '', text: '' });
+
+  useEffect(() => {
+    async function checkBio() {
+      const sup = await isWebAuthnSupported();
+      setBioSupported(sup);
+      if (sup) {
+        setBioInfo(getRegisteredBiometricInfo());
+      }
+    }
+    checkBio();
+  }, []);
+
+  const handleRegisterBio = async () => {
+    setBioMsg({ type: '', text: '' });
+    setBioLoading(true);
+    try {
+      const res = await registerBiometricCredential(import.meta.env.VITE_ADMIN_USERNAME || 'admin');
+      if (res.success) {
+        setBioInfo(res.metadata);
+        setBioMsg({ type: 'success', text: 'Biometric passkey registered successfully on this device!' });
+      }
+    } catch (err) {
+      setBioMsg({ type: 'error', text: err.message || 'Failed to register biometric passkey.' });
+    } finally {
+      setBioLoading(false);
+    }
+  };
+
+  const handleRemoveBio = () => {
+    if (window.confirm('Remove biometric passkey from this device?')) {
+      removeBiometricCredential();
+      setBioInfo(null);
+      setBioMsg({ type: 'info', text: 'Biometric passkey removed from this device.' });
+    }
+  };
 
   // Protected route check
   React.useEffect(() => {
@@ -104,7 +146,7 @@ export default function AdminDashboard() {
         `"${car.transmission || ''}"`,
         `"${car.seats || ''}"`,
         `"${car.fuelType || ''}"`,
-        `"${car.hasAC ? 'Yes' : 'No'}"`,
+        `"${car.hasAC !== false ? 'Yes' : 'No'}"`,
         `"${car.rateInsideAccra || ''}"`,
         `"${car.rateOutsideAccra || ''}"`,
         `"${car.isAvailable !== false ? 'Yes' : 'No'}"`,
@@ -137,7 +179,7 @@ export default function AdminDashboard() {
   };
 
   return (
-    <div className="min-h-screen pt-24 pb-16 space-y-8 transition-colors duration-300">
+    <div className="min-h-screen py-8 space-y-8 transition-colors duration-300">
       
       {/* Top Admin Header Bar */}
       <div className="bg-card border-b border-border py-8 transition-colors duration-300">
@@ -262,8 +304,8 @@ export default function AdminDashboard() {
                 activeTab === 'settings' ? 'bg-primary text-primary-foreground shadow-md' : 'bg-card text-foreground hover:bg-muted border border-border'
               }`}
             >
-              <FileSpreadsheet className="w-4 h-4" />
-              <span>Export & CSV Reports</span>
+              <Settings className="w-4 h-4" />
+              <span>Settings & Security</span>
             </button>
           </div>
 
@@ -507,12 +549,12 @@ export default function AdminDashboard() {
           </div>
         )}
 
-        {/* TAB 4: EXPORT & REPORTS */}
+        {/* TAB 4: SETTINGS & SECURITY */}
         {activeTab === 'settings' && (
           <div className="glass-card p-6 sm:p-8 rounded-3xl border border-border bg-card text-card-foreground space-y-6 shadow-2xl max-w-2xl mx-auto transition-colors duration-300">
             <div>
-              <h2 className="text-base font-bold text-foreground uppercase tracking-wider">Export Data & Reports</h2>
-              <p className="text-xs text-muted-foreground mt-1">Download CSV reports formatted for Excel/Google Sheets or export JSON developer backups.</p>
+              <h2 className="text-base font-bold text-foreground uppercase tracking-wider">Admin Settings & Security</h2>
+              <p className="text-xs text-muted-foreground mt-1">Enroll device biometric passkeys (Windows Hello / Touch ID / Face ID), export CSV reports, and manage system backups.</p>
             </div>
 
             <div className="space-y-4">
@@ -533,6 +575,99 @@ export default function AdminDashboard() {
                   <Download className="w-4 h-4" />
                   <span>Export Fleet Catalog (CSV)</span>
                 </button>
+              </div>
+
+              {/* Biometric Passkey Management Section */}
+              <div className="pt-4 border-t border-border space-y-3">
+                <div className="flex items-center justify-between">
+                  <h4 className="text-xs font-bold text-foreground flex items-center gap-1.5">
+                    <Fingerprint className="w-4 h-4 text-primary" />
+                    <span>Biometric Authentication (Windows Hello / Touch ID / Face ID)</span>
+                  </h4>
+                  <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${
+                    bioInfo
+                      ? 'bg-emerald-500/10 text-emerald-600 border-emerald-500/30'
+                      : bioSupported
+                        ? 'bg-primary/10 text-primary border-primary/20'
+                        : 'bg-muted text-muted-foreground border-border'
+                  }`}>
+                    {bioInfo ? 'Enrolled' : bioSupported ? 'Supported' : 'Not Supported'}
+                  </span>
+                </div>
+
+                <p className="text-[11px] text-muted-foreground leading-relaxed">
+                  Use your device's native biometric authenticator (Windows Hello on PC, Touch ID / Face ID on Mac/iOS) to log into the admin portal in 1 click without entering your password every time.
+                </p>
+
+                {!bioSupported ? (
+                  <div className="p-3 rounded-xl bg-muted border border-border text-[11px] text-muted-foreground">
+                    Biometric authentication is not supported or available on this browser/device.
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    {bioInfo ? (
+                      <div className="p-3 rounded-2xl bg-muted border border-border space-y-2 text-xs">
+                        <div className="flex items-center justify-between">
+                          <span className="font-semibold text-foreground flex items-center gap-1.5">
+                            <ShieldCheck className="w-4 h-4 text-emerald-500" />
+                            <span>{bioInfo.deviceName || 'Registered Authenticator'}</span>
+                          </span>
+                          <span className="text-[10px] text-muted-foreground">
+                            Enrolled: {new Date(bioInfo.registeredAt).toLocaleDateString()}
+                          </span>
+                        </div>
+                        <p className="text-[11px] text-muted-foreground">
+                          Passkey ID: <code className="text-primary font-mono text-[10px]">{bioInfo.id.slice(0, 16)}...</code>
+                        </p>
+                        <div className="flex items-center gap-2 pt-1">
+                          <button
+                            onClick={handleRegisterBio}
+                            disabled={bioLoading}
+                            className="px-3 py-1.5 rounded-lg bg-primary text-primary-foreground font-bold text-[11px] flex items-center gap-1 hover:opacity-90 transition-opacity"
+                          >
+                            {bioLoading ? <Loader2 className="w-3 h-3 animate-spin" /> : <Fingerprint className="w-3 h-3 text-secondary" />}
+                            <span>Re-register Device</span>
+                          </button>
+                          <button
+                            onClick={handleRemoveBio}
+                            className="px-3 py-1.5 rounded-lg bg-destructive/10 text-destructive border border-destructive/20 font-bold text-[11px] hover:bg-destructive/20 transition-colors flex items-center gap-1"
+                          >
+                            <Trash2 className="w-3 h-3" />
+                            <span>Remove Passkey</span>
+                          </button>
+                        </div>
+                      </div>
+                    ) : (
+                      <button
+                        onClick={handleRegisterBio}
+                        disabled={bioLoading}
+                        className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-primary via-primary to-primary/90 text-white font-extrabold text-xs flex items-center justify-center gap-2 shadow-md hover:shadow-lg transition-all"
+                      >
+                        {bioLoading ? (
+                          <>
+                            <Loader2 className="w-4 h-4 animate-spin text-secondary" />
+                            <span>Prompting Windows Hello / Touch ID / Face ID...</span>
+                          </>
+                        ) : (
+                          <>
+                            <Fingerprint className="w-4 h-4 text-secondary" />
+                            <ScanFace className="w-4 h-4 text-secondary" />
+                            <span>Register Windows Hello / Touch ID / Face ID for 1-Click Login</span>
+                          </>
+                        )}
+                      </button>
+                    )}
+
+                    {bioMsg.text && (
+                      <p className={`text-xs font-bold text-center ${
+                        bioMsg.type === 'success' ? 'text-emerald-600 dark:text-emerald-400' :
+                        bioMsg.type === 'error' ? 'text-destructive' : 'text-muted-foreground'
+                      }`}>
+                        {bioMsg.text}
+                      </p>
+                    )}
+                  </div>
+                )}
               </div>
 
               {/* Cloudinary Integration Status */}

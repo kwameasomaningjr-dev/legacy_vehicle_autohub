@@ -33,8 +33,8 @@ export default function App() {
         <div className="flex flex-col min-h-screen bg-background text-foreground font-sans transition-colors duration-300">
           <ScrollToTop />
           
-          {/* Sticky Header Nav */}
-          <Navbar />
+          {/* Sticky Header Nav (hidden on admin pages) */}
+          {!isAdminRoute && <Navbar />}
 
           {/* Main Content Area */}
           <main className="flex-grow">
@@ -60,8 +60,8 @@ export default function App() {
           {/* Persistent Floating WhatsApp CTA (hidden on admin pages for clean UI) */}
           {!isAdminRoute && <WhatsAppFloat />}
 
-          {/* Global Footer */}
-          <Footer />
+          {/* Global Footer (hidden on admin pages for clean UI) */}
+          {!isAdminRoute && <Footer />}
         </div>
       </PhoneProvider>
     </ThemeProvider>

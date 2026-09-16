@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { CARS_DATA } from '../data/cars';
+import { authenticateBiometric } from '../utils/webauthn';
 
 const CarContext = createContext();
 
@@ -97,6 +98,25 @@ export function CarProvider({ children }) {
     };
   };
 
+  const loginWithBiometrics = async () => {
+    try {
+      const res = await authenticateBiometric();
+      if (res.success) {
+        setIsAdminAuthenticated(true);
+        try {
+          sessionStorage.setItem(AUTH_STORAGE_KEY, 'true');
+          localStorage.removeItem(AUTH_STORAGE_KEY);
+        } catch (e) {
+          console.error('Error saving auth to sessionStorage:', e);
+        }
+        return { success: true };
+      }
+      return { success: false, message: 'Biometric verification failed.' };
+    } catch (err) {
+      return { success: false, message: err.message || 'Biometric authentication error.' };
+    }
+  };
+
   const logoutAdmin = () => {
     setIsAdminAuthenticated(false);
     try {
@@ -172,6 +192,7 @@ export function CarProvider({ children }) {
         inquiries,
         isAdminAuthenticated,
         loginAdmin,
+        loginWithBiometrics,
         logoutAdmin,
         addCar,
         updateCar,
