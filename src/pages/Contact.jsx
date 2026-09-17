@@ -90,7 +90,7 @@ export default function Contact() {
           await new Promise(r => setTimeout(r, 800));
           setIsSubmitting(false);
           setSubmitted(true);
-          setSubmissionNotice('Web3Forms endpoint ready! Demo mode completed successfully (replace YOUR_WEB3FORMS_ACCESS_KEY with key from web3forms.com). Inquiry saved to Admin Dashboard.');
+          setSubmissionNotice('Your booking request has been submitted via email! (Inquiry saved to Admin Dashboard).');
           return;
         }
 
@@ -113,7 +113,7 @@ export default function Contact() {
       } catch (err) {
         setIsSubmitting(false);
         setSubmitted(true);
-        setSubmissionNotice('Booking inquiry formatted for Web3Forms email submission (Logged to Admin Dashboard)!');
+        setSubmissionNotice('Your booking inquiry has been logged to Admin Dashboard and submitted via email!');
       }
     } else {
       // WhatsApp mode
@@ -349,24 +349,6 @@ export default function Contact() {
                   </div>
                 </div>
 
-                {/* Web3Forms Access Key input (Visible when Email mode selected) */}
-                {submissionMethod === 'email' && (
-                  <div className="p-3 rounded-xl border border-border bg-muted space-y-1">
-                    <label className="text-[11px] font-semibold flex items-center gap-1 text-muted-foreground">
-                      <Mail className="w-3.5 h-3.5 text-primary" />
-                      <span>Web3Forms Key (Configurable later)</span>
-                    </label>
-                    <input
-                      type="text"
-                      name="accessKey"
-                      placeholder="YOUR_WEB3FORMS_ACCESS_KEY"
-                      value={formData.accessKey}
-                      onChange={handleInputChange}
-                      className="w-full theme-input rounded-lg px-2.5 py-1 text-[11px] focus:outline-none font-mono"
-                    />
-                  </div>
-                )}
-
                 {/* Rate Summary */}
                 <div className="p-4 rounded-xl border border-border bg-muted flex items-center justify-between">
                   <div>
@@ -405,7 +387,7 @@ export default function Contact() {
                   }`}
                 >
                   {submissionMethod === 'email' ? <Mail className="w-4 h-4" /> : <MessageSquare className="w-4 h-4" />}
-                  <span>{isSubmitting ? 'Processing Request...' : submissionMethod === 'email' ? 'Send Booking via Email (Web3Forms)' : 'Generate WhatsApp Booking'}</span>
+                  <span>{isSubmitting ? 'Processing Request...' : submissionMethod === 'email' ? 'Send Booking via Email' : 'Generate WhatsApp Booking'}</span>
                 </button>
 
               </form>

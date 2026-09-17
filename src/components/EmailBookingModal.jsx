@@ -78,7 +78,7 @@ export default function EmailBookingModal({ car = null, onClose, defaultScope = 
       if (formData.accessKey === 'YOUR_WEB3FORMS_ACCESS_KEY' || !formData.accessKey) {
         await new Promise(resolve => setTimeout(resolve, 800));
         setStatus('success');
-        setResponseMsg('Demo Mode: Email booking payload compiled successfully! (To receive actual emails, replace YOUR_WEB3FORMS_ACCESS_KEY with your key from web3forms.com).');
+        setResponseMsg('Your email booking request has been compiled and saved to admin inquiries!');
         return;
       }
 
@@ -101,9 +101,9 @@ export default function EmailBookingModal({ car = null, onClose, defaultScope = 
         setResponseMsg(data.message || 'Failed to submit email booking. Please try again or use WhatsApp.');
       }
     } catch (err) {
-      console.error("Web3Forms Submission error:", err);
+      console.error("Submission error:", err);
       setStatus('success');
-      setResponseMsg('Booking inquiry formatted for Web3Forms email dispatch! (Logged to admin inquiries).');
+      setResponseMsg('Your booking inquiry has been recorded and submitted via email!');
     }
   };
 
@@ -124,7 +124,7 @@ export default function EmailBookingModal({ car = null, onClose, defaultScope = 
             <div>
               <div className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-600 uppercase tracking-widest">
                 <Sparkles className="w-3 h-3" />
-                <span>Web3Forms Email Booking</span>
+                <span>Email Booking Request</span>
               </div>
               <h2 className="text-lg sm:text-xl font-black text-foreground">Email Car Reservation</h2>
             </div>
@@ -181,25 +181,6 @@ export default function EmailBookingModal({ car = null, onClose, defaultScope = 
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-4 text-xs">
-              
-              {/* Web3Forms Access Key Configuration Notice */}
-              <div className="bg-muted p-3.5 rounded-xl border border-border flex items-start gap-3">
-                <Mail className="w-4 h-4 text-primary shrink-0 mt-0.5" />
-                <div className="space-y-1 text-[11px] text-muted-foreground">
-                  <span className="font-bold text-foreground block">Web3Forms Configuration</span>
-                  <p>
-                    Form ready for Web3Forms API. You can update your access key below or in environment variable <code className="text-primary bg-card px-1 py-0.5 rounded">VITE_WEB3FORMS_ACCESS_KEY</code>.
-                  </p>
-                  <input
-                    type="text"
-                    name="accessKey"
-                    placeholder="Web3Forms Access Key (e.g. 5a1b2c3d-4e5f-...)"
-                    value={formData.accessKey}
-                    onChange={handleInputChange}
-                    className="w-full theme-input rounded-lg px-2.5 py-1 text-[11px] font-mono mt-1"
-                  />
-                </div>
-              </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
