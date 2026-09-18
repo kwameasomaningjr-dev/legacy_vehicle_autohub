@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
-import { Users, Fuel, ShieldAlert, Wind, MessageSquare, Eye, Mail } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { Users, Fuel, ShieldAlert, Wind, MessageSquare, Eye, Mail, CalendarCheck, Ban } from 'lucide-react';
 import { buildWhatsAppUrl, generateCarBookingMessage } from '../utils/whatsapp';
+import { useCars } from '../context/CarContext';
 import EmailBookingModal from './EmailBookingModal';
 
 export default function CarCard({ car, scope = "Inside Accra", onSelect }) {
   const [emailModalOpen, setEmailModalOpen] = useState(false);
+  const { addInquiry } = useCars();
 
+  const isBookedOut = car.isAvailable === false;
   const currentRate = scope === "Outside Accra" ? car.rateOutsideAccra : car.rateInsideAccra;
   
   const whatsappUrl = buildWhatsAppUrl(
@@ -13,16 +17,31 @@ export default function CarCard({ car, scope = "Inside Accra", onSelect }) {
     generateCarBookingMessage({ carName: car.name, travelScope: scope })
   );
 
+  const handleWhatsAppClick = () => {
+    addInquiry({
+      customerName: 'WhatsApp Client',
+      phone: 'Direct WhatsApp',
+      email: 'N/A',
+      carName: car.name,
+      travelScope: scope,
+      estimatedRate: `GH₵ ${currentRate.toLocaleString()}`,
+      channel: 'WhatsApp',
+      notes: 'Initiated directly from vehicle fleet card.'
+    });
+  };
+
   return (
     <>
-      <div className="glass-card rounded-2xl overflow-hidden border border-border hover:border-primary transition-all duration-300 flex flex-col group hover:-translate-y-1 shadow-md">
+      <div className={`glass-card rounded-2xl overflow-hidden border transition-all duration-300 flex flex-col group hover:-translate-y-1 shadow-md ${
+        isBookedOut ? 'border-destructive/40 bg-card/60 opacity-90' : 'border-border hover:border-primary'
+      }`}>
         
         {/* Vehicle Image Container */}
         <div className="relative h-52 overflow-hidden bg-muted">
           <img
             src={car.images[0]}
             alt={car.name}
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+            className={`w-full h-full object-cover transition-transform duration-500 ${isBookedOut ? 'grayscale-[20%]' : 'group-hover:scale-105'}`}
             loading="lazy"
           />
 
@@ -31,9 +50,15 @@ export default function CarCard({ car, scope = "Inside Accra", onSelect }) {
             <span className="px-3 py-1 rounded-full text-xs font-bold bg-card/90 backdrop-blur-md text-primary border border-border uppercase tracking-wider shadow-sm">
               {car.category}
             </span>
-            {car.featured && (
+            {car.featured && !isBookedOut && (
               <span className="px-2.5 py-1 rounded-full text-xs font-semibold bg-secondary text-secondary-foreground shadow-md">
                 Featured
+              </span>
+            )}
+            {isBookedOut && (
+              <span className="px-2.5 py-1 rounded-full text-xs font-bold bg-destructive text-destructive-foreground shadow-md flex items-center gap-1 animate-pulse">
+                <Ban className="w-3.5 h-3.5" />
+                <span>Booked Out</span>
               </span>
             )}
           </div>
@@ -58,8 +83,9 @@ export default function CarCard({ car, scope = "Inside Accra", onSelect }) {
           <div>
             <div className="flex items-start justify-between gap-2">
               <div>
-                <h3 className="text-lg font-bold text-foreground group-hover:text-primary transition-colors">
-                  {car.name}
+                <h3 className="text-lg font-bold text-foreground group-hover:text-primary transition-colors flex items-center gap-2">
+                  <span>{car.name}</span>
+                  {isBookedOut && <span className="text-xs text-destructive font-semibold uppercase">(Unavailable)</span>}
                 </h3>
                 <p className="text-xs text-muted-foreground font-medium">{car.year} Model • {car.fuelType}</p>
               </div>
@@ -105,47 +131,43 @@ export default function CarCard({ car, scope = "Inside Accra", onSelect }) {
 
           {/* Action Buttons */}
           <div className="space-y-2 pt-1">
-            <div className="grid grid-cols-2 gap-2">
-              <button
-                onClick={() => onSelect(car)}
-                className="w-full py-2.5 px-3 rounded-xl bg-muted hover:bg-card text-foreground text-xs font-semibold flex items-center justify-center gap-1.5 border border-border transition-colors"
-              >
-                <Eye className="w-4 h-4 text-primary" />
-                <span>View Specs</span>
-              </button>
+            {isBookedOut ? (
+              <div className="p-3 rounded-xl bg-destructive/10 border border-destructive/20 text-destructive text-center space-y-2">
+                <span className="text-xs font-bold block flex items-center justify-center gap-1">
+                  <Ban className="w-4 h-4" />
+                  <span>Currently Booked Out by Admin</span>
+                </span>
+                <button
+                  onClick={() => onSelect(car)}
+                  className="w-full py-2 rounded-lg bg-card text-foreground text-xs font-semibold border border-border"
+                >
+                  View Vehicle Details
+                </button>
+              </div>
+            ) : (
+              <div className="grid grid-cols-2 gap-2">
+                <button
+                  onClick={() => onSelect(car)}
+                  className="w-full py-2.5 px-3 rounded-xl bg-muted hover:bg-card text-foreground text-xs font-semibold flex items-center justify-center gap-1.5 border border-border transition-colors"
+                >
+                  <Eye className="w-4 h-4 text-primary" />
+                  <span>View Specs</span>
+                </button>
 
-              <button
-                onClick={() => setEmailModalOpen(true)}
-                className="w-full py-2.5 px-3 rounded-xl bg-muted hover:bg-primary hover:text-primary-foreground text-foreground text-xs font-semibold flex items-center justify-center gap-1.5 border border-border transition-all"
-              >
-                <Mail className="w-4 h-4 text-primary" />
-                <span>Email Book</span>
-              </button>
-            </div>
-
-            <a
-              href={whatsappUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-full py-2.5 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold flex items-center justify-center gap-1.5 shadow-md shadow-emerald-600/20 transition-all hover:scale-[1.01]"
-            >
-              <MessageSquare className="w-4 h-4 fill-white/20" />
-              <span>Book via WhatsApp</span>
-            </a>
+                <Link
+                  to={`/contact?car=${car.id}&scope=${encodeURIComponent(scope)}`}
+                  className="w-full py-2.5 px-3 rounded-xl bg-secondary hover:bg-secondary/90 text-secondary-foreground text-xs font-extrabold flex items-center justify-center gap-1.5 shadow-md transition-all hover:scale-[1.02]"
+                >
+                  <CalendarCheck className="w-4 h-4" />
+                  <span>Book Now</span>
+                </Link>
+              </div>
+            )}
           </div>
 
         </div>
 
       </div>
-
-      {/* Email Booking Modal */}
-      {emailModalOpen && (
-        <EmailBookingModal
-          car={car}
-          defaultScope={scope}
-          onClose={() => setEmailModalOpen(false)}
-        />
-      )}
     </>
   );
 }

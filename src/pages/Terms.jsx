@@ -4,34 +4,81 @@ import { Link } from 'react-router-dom';
 import { DEFAULT_PHONE_DISPLAY, SECONDARY_PHONE_DISPLAY } from '../utils/whatsapp';
 
 export default function Terms() {
+  const [hasDraft, setHasDraft] = React.useState(false);
+  const [draftCarName, setDraftCarName] = React.useState('');
+
+  React.useEffect(() => {
+    try {
+      const saved = sessionStorage.getItem('legacy_booking_draft_v1');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        setHasDraft(true);
+        if (parsed.fullName || parsed.selectedCarId) {
+          setDraftCarName(parsed.fullName ? `${parsed.fullName}'s Booking` : 'Active Booking');
+        }
+      }
+    } catch (e) {}
+  }, []);
+
+  const handleAcceptAndReturn = () => {
+    try {
+      sessionStorage.setItem('legacy_agreed_terms_v1', 'true');
+    } catch (e) {}
+  };
+
   return (
     <div className="min-h-screen pt-24 pb-16 space-y-12 transition-colors duration-300">
       
       {/* Page Header */}
       <div className="bg-card border-b border-border py-10 transition-colors duration-300">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-3 text-center sm:text-left">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary border border-primary/20 text-xs font-bold uppercase tracking-wider">
-            <Scale className="w-3.5 h-3.5" />
-            <span>Official Rental Policies & Terms</span>
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <div className="space-y-2">
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary border border-primary/20 text-xs font-bold uppercase tracking-wider">
+                <Scale className="w-3.5 h-3.5" />
+                <span>Official Rental Policies & Terms</span>
+              </div>
+              <h1 className="text-3xl sm:text-5xl font-black text-foreground">Terms of Use & Rental Agreement</h1>
+              <p className="text-sm text-muted-foreground max-w-3xl">
+                Please read our standard terms of use governing vehicle rentals, payments, security deposits, and travel compliance.
+              </p>
+            </div>
+
+            <Link
+              to="/contact"
+              onClick={handleAcceptAndReturn}
+              className="px-6 py-3 rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/25 transition-all hover:scale-[1.02] active:scale-95"
+            >
+              <CheckCircle className="w-4 h-4" />
+              <span>Accept Terms & Return to Booking Draft</span>
+            </Link>
           </div>
-          <h1 className="text-3xl sm:text-5xl font-black text-foreground">Terms of Use & Rental Agreement</h1>
-          <p className="text-sm text-muted-foreground max-w-3xl">
-            Please read our standard terms of use governing vehicle rentals, payments, security deposits, and travel compliance.
-          </p>
         </div>
       </div>
 
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10 text-xs text-muted-foreground">
         
         {/* Important Summary Alert */}
-        <div className="bg-card p-5 rounded-2xl border border-primary/30 space-y-2 text-card-foreground shadow-md">
-          <div className="flex items-center gap-2 text-primary font-bold text-sm">
-            <ShieldCheck className="w-5 h-5" />
-            <span>Legacy Vehicle Hub Rental Summary</span>
+        <div className="bg-card p-5 rounded-2xl border border-primary/30 space-y-3 text-card-foreground shadow-md">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="space-y-1">
+              <div className="flex items-center gap-2 text-primary font-bold text-sm">
+                <ShieldCheck className="w-5 h-5" />
+                <span>Legacy Vehicle Hub Rental Summary</span>
+              </div>
+              <p className="text-xs text-muted-foreground leading-relaxed">
+                By booking and operating any vehicle from Legacy Vehicle Hub, the renter agrees to comply with the terms and conditions below. {hasDraft && <strong className="text-emerald-500 block mt-1">✓ Your booking draft details are saved and active.</strong>}
+              </p>
+            </div>
+            <Link
+              to="/contact"
+              onClick={handleAcceptAndReturn}
+              className="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-black text-xs flex items-center justify-center gap-2 shadow-md shrink-0 transition-transform active:scale-95"
+            >
+              <CheckCircle className="w-4 h-4" />
+              <span>Accept Terms & Resume Draft</span>
+            </Link>
           </div>
-          <p className="text-xs text-muted-foreground leading-relaxed">
-            By booking and operating any vehicle from Legacy Vehicle Hub, the renter agrees to comply with the terms and conditions below. These terms protect the company, the vehicle, and all users of the rental agreement.
-          </p>
         </div>
 
         {/* Section 1: Driver Eligibility */}
@@ -167,9 +214,11 @@ export default function Terms() {
           <div className="pt-2 flex flex-wrap items-center justify-center gap-3">
             <Link
               to="/contact"
-              className="px-5 py-2.5 rounded-xl bg-primary hover:opacity-90 text-primary-foreground font-extrabold text-xs shadow-md transition-colors"
+              onClick={handleAcceptAndReturn}
+              className="px-6 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-xs shadow-md transition-colors flex items-center gap-2"
             >
-              Contact Dispatch Office
+              <CheckCircle className="w-4 h-4" />
+              <span>Accept Terms & Resume Booking Draft</span>
             </Link>
             <a
               href={`tel:${DEFAULT_PHONE_DISPLAY.replace(/\s+/g, '')}`}

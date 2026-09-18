@@ -1,28 +1,77 @@
-import React, { useState } from 'react';
-import { MapPin, Phone, Mail, Clock, MessageSquare, Send, CheckCircle2, Car, Calendar, Sparkles, ArrowRight, ShieldCheck, AlertCircle, Moon, Sun } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { useSearchParams, Link } from 'react-router-dom';
+import { MapPin, Phone, Mail, Clock, MessageSquare, Send, CheckCircle2, Car, Calendar, Sparkles, ArrowRight, ShieldCheck, AlertCircle, FileText, Ban } from 'lucide-react';
 import { useCars } from '../context/CarContext';
-import { useTheme } from '../context/ThemeContext';
 import { DEFAULT_PHONE_DISPLAY, SECONDARY_PHONE_DISPLAY, DEFAULT_WHATSAPP_NUMBER, buildWhatsAppUrl, generateCarBookingMessage, generateGeneralInquiryMessage } from '../utils/whatsapp';
 import { usePhoneModal } from '../context/PhoneContext';
 
 export default function Contact() {
+  const [searchParams] = useSearchParams();
   const { cars, addInquiry } = useCars();
-  const { theme, toggleTheme } = useTheme();
   const { openPhoneModal } = usePhoneModal();
 
-  // Form State
+  const queryCarId = searchParams.get('car');
+  const queryScope = searchParams.get('scope');
+
+  // Form State with persistent session draft restore
   const [submissionMethod, setSubmissionMethod] = useState('email'); // 'email' | 'whatsapp'
-  const [formData, setFormData] = useState({
-    fullName: '',
-    email: '',
-    phone: '',
-    selectedCarId: cars[0]?.id || 'car-1',
-    travelScope: 'Inside Accra',
-    pickupDate: '',
-    returnDate: '',
-    notes: '',
-    accessKey: import.meta.env.VITE_WEB3FORMS_ACCESS_KEY || 'YOUR_WEB3FORMS_ACCESS_KEY'
+  
+  const [agreedTerms, setAgreedTerms] = useState(() => {
+    try {
+      return sessionStorage.getItem('legacy_agreed_terms_v1') === 'true';
+    } catch (e) {
+      return false;
+    }
   });
+
+  const [formData, setFormData] = useState(() => {
+    try {
+      const saved = sessionStorage.getItem('legacy_booking_draft_v1');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        return {
+          ...parsed,
+          selectedCarId: queryCarId || parsed.selectedCarId || cars.find(c => c.isAvailable !== false)?.id || cars[0]?.id || 'car-1',
+          travelScope: queryScope || parsed.travelScope || 'Inside Accra',
+          accessKey: import.meta.env.VITE_WEB3FORMS_ACCESS_KEY || 'YOUR_WEB3FORMS_ACCESS_KEY'
+        };
+      }
+    } catch (e) {}
+
+    return {
+      fullName: '',
+      email: '',
+      phone: '',
+      selectedCarId: queryCarId || cars.find(c => c.isAvailable !== false)?.id || cars[0]?.id || 'car-1',
+      travelScope: queryScope || 'Inside Accra',
+      pickupDate: '',
+      returnDate: '',
+      notes: '',
+      accessKey: import.meta.env.VITE_WEB3FORMS_ACCESS_KEY || 'YOUR_WEB3FORMS_ACCESS_KEY'
+    };
+  });
+
+  // Auto-save form draft to sessionStorage whenever fields change
+  useEffect(() => {
+    try {
+      sessionStorage.setItem('legacy_booking_draft_v1', JSON.stringify(formData));
+    } catch (e) {}
+  }, [formData]);
+
+  useEffect(() => {
+    try {
+      sessionStorage.setItem('legacy_agreed_terms_v1', agreedTerms ? 'true' : 'false');
+    } catch (e) {}
+  }, [agreedTerms]);
+
+  useEffect(() => {
+    if (queryCarId) {
+      setFormData(prev => ({ ...prev, selectedCarId: queryCarId }));
+    }
+    if (queryScope) {
+      setFormData(prev => ({ ...prev, travelScope: queryScope }));
+    }
+  }, [queryCarId, queryScope]);
 
   const [submitted, setSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -34,6 +83,7 @@ export default function Contact() {
   };
 
   const selectedCarObj = cars.find(c => c.id === formData.selectedCarId) || cars[0] || {};
+  const isSelectedCarBookedOut = selectedCarObj.isAvailable === false;
   const estimatedRate = formData.travelScope === 'Outside Accra' ? selectedCarObj.rateOutsideAccra : selectedCarObj.rateInsideAccra;
 
   const generatedWhatsAppMsg = generateCarBookingMessage({
@@ -52,10 +102,19 @@ export default function Contact() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!agreedTerms) {
+      alert("Please accept the Terms of Use before submitting your booking reservation.");
+      return;
+    }
+    if (isSelectedCarBookedOut) {
+      alert("The selected vehicle is currently booked out. Please choose an available vehicle.");
+      return;
+    }
+
     setIsSubmitting(true);
     setSubmissionNotice('');
 
-    // Log inquiry to admin state
+    // Log inquiry to admin state with channel indicator
     addInquiry({
       customerName: formData.fullName,
       email: formData.email,
@@ -65,7 +124,8 @@ export default function Contact() {
       estimatedRate: `GH₵ ${estimatedRate ? estimatedRate.toLocaleString() : '0'}`,
       pickupDate: formData.pickupDate,
       returnDate: formData.returnDate,
-      notes: formData.notes
+      notes: formData.notes,
+      channel: submissionMethod === 'email' ? 'Email' : 'WhatsApp'
     });
 
     if (submissionMethod === 'email') {
@@ -91,6 +151,10 @@ export default function Contact() {
           setIsSubmitting(false);
           setSubmitted(true);
           setSubmissionNotice('Your booking request has been submitted via email! (Inquiry saved to Admin Dashboard).');
+          try {
+            sessionStorage.removeItem('legacy_booking_draft_v1');
+            sessionStorage.removeItem('legacy_agreed_terms_v1');
+          } catch (e) {}
           return;
         }
 
@@ -110,15 +174,27 @@ export default function Contact() {
           setSubmitted(true);
           setSubmissionNotice(data.message || 'Submitted successfully!');
         }
+        try {
+          sessionStorage.removeItem('legacy_booking_draft_v1');
+          sessionStorage.removeItem('legacy_agreed_terms_v1');
+        } catch (e) {}
       } catch (err) {
         setIsSubmitting(false);
         setSubmitted(true);
         setSubmissionNotice('Your booking inquiry has been logged to Admin Dashboard and submitted via email!');
+        try {
+          sessionStorage.removeItem('legacy_booking_draft_v1');
+          sessionStorage.removeItem('legacy_agreed_terms_v1');
+        } catch (e) {}
       }
     } else {
       // WhatsApp mode
       setIsSubmitting(false);
       setSubmitted(true);
+      try {
+        sessionStorage.removeItem('legacy_booking_draft_v1');
+        sessionStorage.removeItem('legacy_agreed_terms_v1');
+      } catch (e) {}
     }
   };
 
@@ -130,15 +206,6 @@ export default function Contact() {
             <h1 className="text-3xl sm:text-5xl font-black text-foreground">Contact & Booking</h1>
             <p className="text-sm mt-1 text-muted-foreground">Reach our dispatch team 24/7 or make a direct vehicle reservation.</p>
           </div>
-
-          <button
-            type="button"
-            onClick={toggleTheme}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-border bg-card text-card-foreground font-bold text-xs shadow-lg transition-all hover:bg-muted"
-          >
-            {theme === 'dark' ? <Sun className="w-4 h-4 text-secondary" /> : <Moon className="w-4 h-4 text-primary" />}
-            <span>{theme === 'dark' ? 'Light Mode' : 'Dark Mode'}</span>
-          </button>
         </div>
 
         {/* Contact Info Cards */}
@@ -292,13 +359,20 @@ export default function Contact() {
                       className="w-full theme-input rounded-xl px-3.5 py-2.5 text-xs focus:outline-none"
                     >
                       {cars.map(car => (
-                        <option key={car.id} value={car.id}>
-                          {car.name} ({car.category})
+                        <option key={car.id} value={car.id} disabled={car.isAvailable === false}>
+                          {car.name} ({car.category}) {car.isAvailable === false ? '— [Booked Out]' : ''}
                         </option>
                       ))}
                     </select>
                   </div>
                 </div>
+
+                {isSelectedCarBookedOut && (
+                  <div className="p-3 rounded-xl bg-destructive/10 border border-destructive/30 text-destructive text-xs flex items-center gap-2">
+                    <Ban className="w-4 h-4 shrink-0" />
+                    <span>The selected vehicle <strong>{selectedCarObj.name}</strong> is currently booked out by admin. Please select an available vehicle above.</span>
+                  </div>
+                )}
 
                 {/* Travel Scope & Dates */}
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -376,18 +450,50 @@ export default function Contact() {
                   />
                 </div>
 
+                {/* MANDATORY TERMS OF USE CHECKBOX */}
+                <div className="p-3.5 rounded-xl border border-border bg-muted/60 space-y-1">
+                  <div className="flex items-start gap-2.5">
+                    <input
+                      type="checkbox"
+                      id="termsCheckbox"
+                      checked={agreedTerms}
+                      onChange={(e) => setAgreedTerms(e.target.checked)}
+                      className="mt-0.5 rounded border-border text-primary focus:ring-primary h-4 w-4 shrink-0 accent-primary cursor-pointer"
+                      required
+                    />
+                    <label htmlFor="termsCheckbox" className="text-xs text-foreground font-medium leading-relaxed cursor-pointer select-none">
+                      I accept the <Link to="/terms" className="text-primary font-bold underline hover:text-primary/80">Terms of Use & Rental Policies</Link> before proceeding with this vehicle booking reservation.
+                    </label>
+                  </div>
+                  {!agreedTerms && (
+                    <p className="text-[11px] text-amber-500 font-semibold pl-6">
+                      * You must check the box above to enable booking.
+                    </p>
+                  )}
+                </div>
+
                 {/* Submit Button */}
                 <button
                   type="submit"
-                  disabled={isSubmitting}
-                  className={`w-full py-3.5 rounded-xl font-extrabold text-sm flex items-center justify-center gap-2 shadow-lg transition-all active:scale-95 ${
+                  disabled={isSubmitting || !agreedTerms || isSelectedCarBookedOut}
+                  className={`w-full py-3.5 rounded-xl font-extrabold text-sm flex items-center justify-center gap-2 shadow-lg transition-all active:scale-95 disabled:opacity-45 disabled:cursor-not-allowed ${
                     submissionMethod === 'email'
                       ? 'bg-primary hover:bg-primary/90 text-primary-foreground'
                       : 'bg-emerald-600 hover:bg-emerald-500 text-white shadow-emerald-600/20'
                   }`}
                 >
                   {submissionMethod === 'email' ? <Mail className="w-4 h-4" /> : <MessageSquare className="w-4 h-4" />}
-                  <span>{isSubmitting ? 'Processing Request...' : submissionMethod === 'email' ? 'Send Booking via Email' : 'Generate WhatsApp Booking'}</span>
+                  <span>
+                    {isSubmitting
+                      ? 'Processing Request...'
+                      : !agreedTerms
+                        ? 'Please Accept Terms of Use Above'
+                        : isSelectedCarBookedOut
+                          ? 'Vehicle Booked Out'
+                          : submissionMethod === 'email'
+                            ? 'Send Booking via Email'
+                            : 'Generate WhatsApp Booking'}
+                  </span>
                 </button>
 
               </form>
@@ -466,7 +572,7 @@ export default function Contact() {
                   src="https://www.google.com/maps?q=Legacy+Vehicle+Hub%2C+Driving+School%2C+Tema&output=embed"
                   width="100%"
                   height="100%"
-                  style={{ border: 0, filter: theme === 'dark' ? 'invert(90%) hue-rotate(180deg)' : 'none' }}
+                  style={{ border: 0, filter: 'invert(90%) hue-rotate(180deg)' }}
                   allowFullScreen=""
                   loading="lazy"
                   referrerPolicy="no-referrer-when-downgrade"

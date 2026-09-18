@@ -80,7 +80,7 @@ export default function Navbar() {
             ))}
           </nav>
 
-          {/* CTA Buttons & Theme Toggle */}
+          {/* CTA Buttons & Admin */}
           <div className="hidden lg:flex items-center gap-2">
             {/* Admin Portal Lock Icon Button */}
             <Link
@@ -90,20 +90,6 @@ export default function Navbar() {
             >
               <Lock className="w-4 h-4" />
             </Link>
-
-            {/* Dark / Light Mode Toggle Button (Icon Only) */}
-            <button
-              onClick={toggleTheme}
-              aria-label="Toggle Theme"
-              className="p-2 rounded-xl bg-muted hover:bg-card text-foreground border border-border transition-all hover:scale-105 shrink-0"
-              title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
-            >
-              {theme === 'dark' ? (
-                <Sun className="w-4 h-4 text-secondary animate-pulse" />
-              ) : (
-                <Moon className="w-4 h-4 text-primary" />
-              )}
-            </button>
 
             <button
               onClick={openPhoneModal}
@@ -134,16 +120,6 @@ export default function Navbar() {
             >
               <Lock className="w-4.5 h-4.5" />
             </Link>
-
-            {/* Theme Toggle Mobile */}
-            <button
-              onClick={toggleTheme}
-              aria-label="Toggle Theme"
-              className="p-2 rounded-lg bg-muted text-secondary border border-border"
-              title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
-            >
-              {theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5 text-primary" />}
-            </button>
 
             <button
               onClick={openPhoneModal}
@@ -193,20 +169,6 @@ export default function Navbar() {
               <Lock className="w-4 h-4" />
               <span>{isAdminAuthenticated ? 'Admin Dashboard' : 'Admin Portal Login'}</span>
             </Link>
-
-            {/* Theme toggle option inside mobile drawer */}
-            <button
-              onClick={toggleTheme}
-              className="flex items-center justify-between w-full px-4 py-3 rounded-xl bg-muted text-foreground border border-border font-semibold text-sm"
-            >
-              <span className="flex items-center gap-2">
-                {theme === 'dark' ? <Sun className="w-5 h-5 text-secondary" /> : <Moon className="w-5 h-5 text-primary" />}
-                Theme: {theme === 'dark' ? 'Dark Mode' : 'Light Mode'}
-              </span>
-              <span className="text-xs px-2.5 py-1 rounded-full bg-secondary/20 text-secondary-foreground border border-secondary/30">
-                Switch to {theme === 'dark' ? 'Light' : 'Dark'}
-              </span>
-            </button>
 
             <button
               onClick={() => {

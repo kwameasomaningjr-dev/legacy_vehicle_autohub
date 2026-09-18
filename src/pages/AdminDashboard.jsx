@@ -92,7 +92,7 @@ export default function AdminDashboard() {
       return;
     }
 
-    const headers = ["ID", "Date", "Customer Name", "Email", "Phone", "Requested Vehicle", "Travel Scope", "Estimated Rate", "Pickup Date", "Return Date", "Special Notes"];
+    const headers = ["ID", "Date", "Channel", "Customer Name", "Email", "Phone", "Requested Vehicle", "Travel Scope", "Estimated Rate", "Pickup Date", "Return Date", "Special Notes"];
     
     const csvRows = [];
     csvRows.push(headers.join(","));
@@ -101,6 +101,7 @@ export default function AdminDashboard() {
       const row = [
         `"${inq.id || ''}"`,
         `"${inq.date || ''}"`,
+        `"${inq.channel || 'Email'}"`,
         `"${(inq.customerName || '').replace(/"/g, '""')}"`,
         `"${(inq.email || '').replace(/"/g, '""')}"`,
         `"${(inq.phone || '').replace(/"/g, '""')}"`,
@@ -506,6 +507,7 @@ export default function AdminDashboard() {
                   <thead className="bg-muted text-foreground font-semibold border-b border-border uppercase tracking-wider text-[10px]">
                     <tr>
                       <th className="p-3.5">Date</th>
+                      <th className="p-3.5">Channel</th>
                       <th className="p-3.5">Customer</th>
                       <th className="p-3.5">Requested Vehicle</th>
                       <th className="p-3.5">Travel Scope</th>
@@ -517,7 +519,16 @@ export default function AdminDashboard() {
                   <tbody className="divide-y divide-border">
                     {inquiries.map((inq) => (
                       <tr key={inq.id} className="hover:bg-muted/50 transition-colors">
-                        <td className="p-3.5 text-muted-foreground">{inq.date}</td>
+                        <td className="p-3.5 text-muted-foreground whitespace-nowrap">{inq.date}</td>
+                        <td className="p-3.5">
+                          <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold border inline-flex items-center gap-1 ${
+                            inq.channel === 'WhatsApp'
+                              ? 'bg-emerald-500/10 text-emerald-600 border-emerald-500/30'
+                              : 'bg-primary/10 text-primary border-primary/30'
+                          }`}>
+                            {inq.channel === 'WhatsApp' ? 'WhatsApp' : 'Email'}
+                          </span>
+                        </td>
                         <td className="p-3.5">
                           <strong className="text-foreground block">{inq.customerName}</strong>
                           <a href={`tel:${inq.phone}`} className="text-[11px] text-emerald-600 dark:text-emerald-400 hover:underline">{inq.phone}</a>

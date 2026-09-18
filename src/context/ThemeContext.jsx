@@ -1,31 +1,23 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useEffect } from 'react';
 
 const ThemeContext = createContext();
 
 export function ThemeProvider({ children }) {
-  const [theme, setTheme] = useState(() => {
-    const saved = localStorage.getItem('legacy_theme');
-    if (saved) return saved;
-    // Default to dark mode for luxury auto hub feel
-    return 'dark';
-  });
+  // Permanently set to dark mode for luxury auto hub feel
+  const theme = 'dark';
 
   useEffect(() => {
     const root = document.documentElement;
-    if (theme === 'dark') {
-      root.classList.add('dark');
-    } else {
-      root.classList.remove('dark');
-    }
-    localStorage.setItem('legacy_theme', theme);
-  }, [theme]);
+    root.classList.add('dark');
+    localStorage.setItem('legacy_theme', 'dark');
+  }, []);
 
   const toggleTheme = () => {
-    setTheme(prev => (prev === 'dark' ? 'light' : 'dark'));
+    // Theme locked to dark mode
   };
 
   return (
-    <ThemeContext.Provider value={{ theme, toggleTheme, setTheme }}>
+    <ThemeContext.Provider value={{ theme, toggleTheme, setTheme: () => {} }}>
       {children}
     </ThemeContext.Provider>
   );
@@ -38,3 +30,4 @@ export function useTheme() {
   }
   return context;
 }
+

@@ -176,6 +176,7 @@ export function CarProvider({ children }) {
     const newInquiry = {
       id: `inq-${Date.now()}`,
       date: new Date().toISOString().split('T')[0],
+      channel: inquiryData.channel || 'Email',
       ...inquiryData
     };
     setInquiries(prev => [newInquiry, ...prev]);

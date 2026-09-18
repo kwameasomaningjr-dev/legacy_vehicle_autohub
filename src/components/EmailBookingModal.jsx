@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { X, Mail, Send, CheckCircle2, AlertCircle, Calendar, MapPin, User, Phone, Car, Sparkles } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { X, Mail, Send, CheckCircle2, AlertCircle, Calendar, MapPin, User, Phone, Car, Sparkles, Ban } from 'lucide-react';
 import { useCars } from '../context/CarContext';
 
 export default function EmailBookingModal({ car = null, onClose, defaultScope = "Inside Accra" }) {
   const { cars, addInquiry } = useCars();
 
-  const [selectedCarId, setSelectedCarId] = useState(car ? car.id : (cars[0]?.id || 'car-1'));
+  const [selectedCarId, setSelectedCarId] = useState(car ? car.id : (cars.find(c => c.isAvailable !== false)?.id || cars[0]?.id || 'car-1'));
   const [travelScope, setTravelScope] = useState(defaultScope);
+  const [agreedTerms, setAgreedTerms] = useState(false);
   
   const [formData, setFormData] = useState({
     fullName: '',
@@ -30,6 +32,7 @@ export default function EmailBookingModal({ car = null, onClose, defaultScope = 
   }, []);
 
   const selectedCarObj = cars.find(c => c.id === selectedCarId) || cars[0] || {};
+  const isSelectedCarBookedOut = selectedCarObj.isAvailable === false;
   const estimatedRate = travelScope === "Outside Accra" ? selectedCarObj.rateOutsideAccra : selectedCarObj.rateInsideAccra;
 
   const handleInputChange = (e) => {
@@ -41,6 +44,15 @@ export default function EmailBookingModal({ car = null, onClose, defaultScope = 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!agreedTerms) {
+      alert("Please accept the Terms of Use before submitting.");
+      return;
+    }
+    if (isSelectedCarBookedOut) {
+      alert("The selected vehicle is currently booked out.");
+      return;
+    }
+
     setStatus('submitting');
     setResponseMsg('');
 
@@ -54,7 +66,8 @@ export default function EmailBookingModal({ car = null, onClose, defaultScope = 
       estimatedRate: `GH₵ ${estimatedRate ? estimatedRate.toLocaleString() : '0'}`,
       pickupDate: formData.pickupDate,
       returnDate: formData.returnDate,
-      notes: formData.notes
+      notes: formData.notes,
+      channel: 'Email'
     });
 
     try {
@@ -191,8 +204,8 @@ export default function EmailBookingModal({ car = null, onClose, defaultScope = 
                     className="w-full theme-input rounded-xl px-3 py-2 text-xs focus:outline-none"
                   >
                     {cars.map(c => (
-                      <option key={c.id} value={c.id}>
-                        {c.name} ({c.category})
+                      <option key={c.id} value={c.id} disabled={c.isAvailable === false}>
+                        {c.name} ({c.category}) {c.isAvailable === false ? '— [Booked Out]' : ''}
                       </option>
                     ))}
                   </select>
@@ -222,6 +235,13 @@ export default function EmailBookingModal({ car = null, onClose, defaultScope = 
                   </div>
                 </div>
               </div>
+
+              {isSelectedCarBookedOut && (
+                <div className="p-3 rounded-xl bg-destructive/10 border border-destructive/30 text-destructive text-xs flex items-center gap-2">
+                  <Ban className="w-4 h-4 shrink-0" />
+                  <span>The vehicle <strong>{selectedCarObj.name}</strong> is currently booked out by admin.</span>
+                </div>
+              )}
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
@@ -312,6 +332,28 @@ export default function EmailBookingModal({ car = null, onClose, defaultScope = 
                 />
               </div>
 
+              {/* Mandatory Terms Checkbox */}
+              <div className="p-3 rounded-xl border border-border bg-muted/60 space-y-1">
+                <div className="flex items-start gap-2">
+                  <input
+                    type="checkbox"
+                    id="modalTermsCheckbox"
+                    checked={agreedTerms}
+                    onChange={(e) => setAgreedTerms(e.target.checked)}
+                    className="mt-0.5 rounded border-border text-primary focus:ring-primary h-4 w-4 shrink-0 accent-primary cursor-pointer"
+                    required
+                  />
+                  <label htmlFor="modalTermsCheckbox" className="text-xs text-foreground font-medium leading-relaxed cursor-pointer select-none">
+                    I accept the <Link to="/terms" onClick={onClose} className="text-primary font-bold underline hover:text-primary/80">Terms of Use & Rental Policies</Link> before booking.
+                  </label>
+                </div>
+                {!agreedTerms && (
+                  <p className="text-[11px] text-amber-500 font-semibold pl-6">
+                    * Acceptance required to submit booking.
+                  </p>
+                )}
+              </div>
+
               {status === 'error' && (
                 <div className="p-3 rounded-xl bg-destructive/10 border border-destructive/30 text-destructive text-xs flex items-center gap-2">
                   <AlertCircle className="w-4 h-4 shrink-0" />
@@ -321,11 +363,19 @@ export default function EmailBookingModal({ car = null, onClose, defaultScope = 
 
               <button
                 type="submit"
-                disabled={status === 'submitting'}
-                className="w-full py-3.5 rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground font-extrabold text-sm flex items-center justify-center gap-2 shadow-lg transition-all active:scale-95 disabled:opacity-50"
+                disabled={status === 'submitting' || !agreedTerms || isSelectedCarBookedOut}
+                className="w-full py-3.5 rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground font-extrabold text-sm flex items-center justify-center gap-2 shadow-lg transition-all active:scale-95 disabled:opacity-45 disabled:cursor-not-allowed"
               >
                 <Send className="w-4 h-4" />
-                <span>{status === 'submitting' ? 'Sending Request via Email...' : 'Submit Email Booking Request'}</span>
+                <span>
+                  {status === 'submitting'
+                    ? 'Sending Request via Email...'
+                    : !agreedTerms
+                      ? 'Please Accept Terms of Use'
+                      : isSelectedCarBookedOut
+                        ? 'Vehicle Booked Out'
+                        : 'Submit Email Booking Request'}
+                </span>
               </button>
 
             </form>

@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Car, Search, ShieldCheck, UserCheck, Clock, MapPin, Sparkles, Phone, MessageSquare, ArrowRight, Award, Compass, KeyRound, Briefcase, CheckCircle2 } from 'lucide-react';
+import { Car, Search, ShieldCheck, UserCheck, Clock, MapPin, Sparkles, Phone, MessageSquare, ArrowRight, Award, Compass, KeyRound, Briefcase, CheckCircle2, ChevronLeft, ChevronRight, CalendarCheck } from 'lucide-react';
 import { CATEGORIES, TRANSMISSIONS } from '../data/cars';
 import { useCars } from '../context/CarContext';
 import CarCard from '../components/CarCard';
@@ -8,10 +8,46 @@ import CarDetailModal from '../components/CarDetailModal';
 import { DEFAULT_PHONE_DISPLAY, DEFAULT_WHATSAPP_NUMBER, buildWhatsAppUrl, generateGeneralInquiryMessage } from '../utils/whatsapp';
 import { usePhoneModal } from '../context/PhoneContext';
 
+const HERO_SLIDES = [
+  {
+    image: "/hero-car.jpg",
+    tag: "Ghana's Premier Chauffeur & Self-Drive Fleet",
+    title: "Drive Ghana in ",
+    titleHighlight: "Absolute Comfort & Luxury",
+    subtitle: "From business trips in Accra to regional journeys across Kumasi, Takoradi, and Cape Coast. Enjoy fully-maintained SUVs, executive sedans, and group shuttles with transparent rates and zero hidden charges."
+  },
+  {
+    image: "/hero-slide-3.jpg",
+    tag: "Complete Fleet Collection Across Ghana",
+    title: "Pristine Luxury Sedans & ",
+    titleHighlight: "Commanding 4x4 SUVs",
+    subtitle: "Explore our full range of luxury vehicles engineered for executive corporate transport, family travel, and inter-city road clearances."
+  }
+];
+
 export default function Home() {
   const navigate = useNavigate();
   const { cars } = useCars();
   const { openPhoneModal } = usePhoneModal();
+
+  // Slideshow State
+  const [currentSlide, setCurrentSlide] = useState(0);
+
+  // Auto-slide effect (continuous loop)
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % HERO_SLIDES.length);
+    }, 5000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const prevSlide = () => {
+    setCurrentSlide((prev) => (prev === 0 ? HERO_SLIDES.length - 1 : prev - 1));
+  };
+
+  const nextSlide = () => {
+    setCurrentSlide((prev) => (prev + 1) % HERO_SLIDES.length);
+  };
 
   // Quick Filter State
   const [selectedCategory, setSelectedCategory] = useState("All");
@@ -36,20 +72,33 @@ export default function Home() {
   return (
     <div className="min-h-screen space-y-16 sm:space-y-24 pb-12 transition-colors duration-300">
 
-      {/* HERO SECTION */}
-      <section className="relative min-h-[90vh] flex items-center pt-24 pb-16 overflow-hidden">
+      {/* HERO SECTION WITH DYNAMIC SLIDESHOW & SPACIOUS ("FAT") LAYOUT */}
+      <section className="relative min-h-[88vh] sm:min-h-[92vh] flex items-center pt-28 sm:pt-36 pb-20 sm:pb-24 overflow-hidden">
 
-        {/* Background Image with Brighter Visibility */}
-        <div className="absolute inset-0 z-0">
-          <img
-            src="/hero-car.jpg"
-            alt="Legacy Vehicle Hub Ghana Luxury Rental"
-            className="w-full h-full object-cover object-center opacity-85 brightness-105 scale-105"
-          />
-          {/* Softened Overlays for Vibrant Image Visibility & Crisp Text Contrast */}
-          <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-background/20" />
-          <div className="absolute inset-0 bg-gradient-to-r from-background/90 via-background/50 to-transparent" />
-        </div>
+        {/* Slideshow Background Images with Fit-to-Container Ratio */}
+        {HERO_SLIDES.map((slide, idx) => (
+          <div
+            key={idx}
+            className={`absolute inset-0 z-0 transition-opacity duration-1000 ease-in-out bg-black/90 ${idx === currentSlide ? 'opacity-100 scale-100' : 'opacity-0 scale-105 pointer-events-none'
+              }`}
+          >
+            {/* Ambient Blurred Fill for seamless edge-to-edge aesthetics */}
+            <img
+              src={slide.image}
+              alt=""
+              className="w-full h-full object-cover object-center brightness-50 blur-xl scale-110 opacity-60"
+            />
+            {/* Primary Crisp Image Fitted to Screen */}
+            <img
+              src={slide.image}
+              alt={slide.tag}
+              className="absolute inset-0 w-full h-full object-cover sm:object-contain object-center sm:object-right-bottom brightness-105"
+            />
+            {/* Deep Rich Overlays for 100% Crisp Text Contrast Across Any Slide */}
+            <div className="absolute inset-0 bg-gradient-to-t from-background via-background/85 to-background/40" />
+            <div className="absolute inset-0 bg-gradient-to-r from-background/95 via-background/70 to-transparent" />
+          </div>
+        ))}
 
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
           <div className="max-w-3xl space-y-6">
@@ -57,32 +106,37 @@ export default function Home() {
             {/* Pill Tag */}
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-card/90 border border-secondary/40 text-secondary-foreground text-xs font-semibold uppercase tracking-wider backdrop-blur-md shadow-lg">
               <Sparkles className="w-3.5 h-3.5 text-secondary" />
-              <span>Ghana's Premier Chauffeur & Self-Drive Fleet</span>
+              <span>{HERO_SLIDES[currentSlide].tag}</span>
             </div>
 
-            {/* Main Headline */}
-            <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black text-foreground tracking-tight leading-[1.1] drop-shadow-md">
-              Drive Ghana in <span className="text-secondary">Absolute Comfort & Luxury</span>
+            {/* Main Headline (Refined Font Size & Clear Contrast) */}
+            <h1 className="text-2xl sm:text-4xl lg:text-4xl font-extrabold text-foreground tracking-tight leading-[1.15] drop-shadow-md">
+              {HERO_SLIDES[currentSlide].title}
+              <span className="text-secondary">{HERO_SLIDES[currentSlide].titleHighlight}</span>
             </h1>
 
             {/* Sub-headline */}
-            <p className="text-base sm:text-lg text-foreground/90 leading-relaxed font-semibold drop-shadow">
-              From business trips in Accra to regional journeys across Kumasi, Takoradi, and Cape Coast. Enjoy fully-maintained SUVs, executive sedans, and group shuttles with transparent rates and zero hidden charges.
+            <p className="text-sm sm:text-base text-foreground/90 leading-relaxed font-semibold drop-shadow">
+              {HERO_SLIDES[currentSlide].subtitle}
             </p>
 
-            {/* Quick Benefits */}
-            <div className="flex flex-wrap items-center gap-4 text-xs font-bold text-foreground pt-2 drop-shadow">
-              <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-card/80 border border-border backdrop-blur-sm">
-                <CheckCircle2 className="w-4 h-4 text-emerald-500" />
-                <span>Flexible Daily & Weekly Terms</span>
-              </div>
-              <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-card/80 border border-border backdrop-blur-sm">
-                <CheckCircle2 className="w-4 h-4 text-emerald-500" />
-                <span>Verified Chauffeur Options</span>
-              </div>
-              <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-card/80 border border-border backdrop-blur-sm">
+            {/* Quick CTAs & Benefits */}
+            <div className="flex flex-wrap items-center gap-3 text-xs font-bold text-foreground pt-1">
+              <Link
+                to="/contact"
+                className="px-5 py-2.5 rounded-xl bg-secondary hover:bg-secondary/90 text-secondary-foreground font-black text-xs flex items-center gap-2 shadow-lg transition-transform active:scale-95"
+              >
+                <CalendarCheck className="w-4 h-4" />
+                <span>Book Now / Contact</span>
+              </Link>
+
+              <div className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-card/80 border border-border backdrop-blur-sm">
                 <CheckCircle2 className="w-4 h-4 text-emerald-500" />
                 <span>Flexible Daily Rates</span>
+              </div>
+              <div className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-card/80 border border-border backdrop-blur-sm">
+                <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+                <span>Chauffeur & Self-Drive</span>
               </div>
             </div>
 
@@ -149,19 +203,64 @@ export default function Home() {
                   <p className="text-xs text-muted-foreground hidden sm:block">
                     Showing vehicles configured for <strong className="text-primary">{scope}</strong>
                   </p>
-                  <button
-                    type="submit"
-                    className="w-full sm:w-auto px-6 py-3 rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground font-extrabold text-sm flex items-center justify-center gap-2 shadow-lg transition-transform active:scale-95"
-                  >
-                    <Search className="w-4 h-4 stroke-[3]" />
-                    <span>Find Available Cars</span>
-                  </button>
+                  <div className="flex items-center gap-2 w-full sm:w-auto">
+                    <Link
+                      to={`/contact?scope=${encodeURIComponent(scope)}`}
+                      className="w-full sm:w-auto px-5 py-3 rounded-xl bg-card hover:bg-muted text-foreground border border-border font-extrabold text-xs flex items-center justify-center gap-1.5 shadow"
+                    >
+                      <CalendarCheck className="w-4 h-4 text-primary" />
+                      <span>Book Now</span>
+                    </Link>
+
+                    <button
+                      type="submit"
+                      className="w-full sm:w-auto px-6 py-3 rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground font-extrabold text-sm flex items-center justify-center gap-2 shadow-lg transition-transform active:scale-95"
+                    >
+                      <Search className="w-4 h-4 stroke-[3]" />
+                      <span>Find Cars</span>
+                    </button>
+                  </div>
                 </div>
               </form>
             </div>
 
           </div>
         </div>
+
+        {/* ELEGANT NON-OVERLAPPING CAROUSEL CONTROL WIDGET (Bottom Right) */}
+        <div className="absolute bottom-6 right-6 sm:bottom-10 sm:right-12 z-20 flex items-center gap-3 bg-card/90 border border-border backdrop-blur-md px-3.5 py-2 rounded-full shadow-2xl">
+          <button
+            onClick={prevSlide}
+            className="p-1.5 rounded-full hover:bg-muted text-foreground transition-colors"
+            aria-label="Previous Slide"
+            title="Previous Slide"
+          >
+            <ChevronLeft className="w-4 h-4" />
+          </button>
+
+          {/* Dots */}
+          <div className="flex items-center gap-1.5">
+            {HERO_SLIDES.map((_, idx) => (
+              <button
+                key={idx}
+                onClick={() => setCurrentSlide(idx)}
+                className={`h-2 rounded-full transition-all duration-300 ${idx === currentSlide ? 'w-6 bg-secondary' : 'w-2 bg-muted-foreground/40 hover:bg-foreground'
+                  }`}
+                aria-label={`Go to slide ${idx + 1}`}
+              />
+            ))}
+          </div>
+
+          <button
+            onClick={nextSlide}
+            className="p-1.5 rounded-full hover:bg-muted text-foreground transition-colors"
+            aria-label="Next Slide"
+            title="Next Slide"
+          >
+            <ChevronRight className="w-4 h-4" />
+          </button>
+        </div>
+
       </section>
 
       {/* FEATURED FLEET GRID */}

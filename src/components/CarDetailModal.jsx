@@ -1,17 +1,21 @@
 import React, { useState } from 'react';
-import { X, CheckCircle2, Users, Fuel, Wind, Car, ShieldCheck, Phone, MessageSquare, Mail, Calendar, FileText } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { X, CheckCircle2, Users, Fuel, Wind, Car, ShieldCheck, Phone, MessageSquare, Mail, Calendar, FileText, CalendarCheck, Ban } from 'lucide-react';
 import { DEFAULT_PHONE_DISPLAY, buildWhatsAppUrl, generateCarBookingMessage } from '../utils/whatsapp';
+import { useCars } from '../context/CarContext';
 import EmailBookingModal from './EmailBookingModal';
 
 export default function CarDetailModal({ car, defaultScope = "Inside Accra", onClose }) {
   if (!car) return null;
 
+  const { addInquiry } = useCars();
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [scope, setScope] = useState(defaultScope);
   const [pickupDate, setPickupDate] = useState('');
   const [returnDate, setReturnDate] = useState('');
   const [showEmailModal, setShowEmailModal] = useState(false);
 
+  const isBookedOut = car.isAvailable === false;
   const currentRate = scope === "Outside Accra" ? car.rateOutsideAccra : car.rateInsideAccra;
 
   const whatsappUrl = buildWhatsAppUrl(
@@ -23,6 +27,21 @@ export default function CarDetailModal({ car, defaultScope = "Inside Accra", onC
       returnDate
     })
   );
+
+  const handleWhatsAppClick = () => {
+    addInquiry({
+      customerName: 'WhatsApp Client (Modal Specs)',
+      phone: 'Direct WhatsApp',
+      email: 'N/A',
+      carName: car.name,
+      travelScope: scope,
+      estimatedRate: `GH₵ ${currentRate.toLocaleString()}`,
+      pickupDate: pickupDate || 'Not specified',
+      returnDate: returnDate || 'Not specified',
+      channel: 'WhatsApp',
+      notes: 'Initiated from Car Detail Modal.'
+    });
+  };
 
   return (
     <>
@@ -42,6 +61,12 @@ export default function CarDetailModal({ car, defaultScope = "Inside Accra", onC
                   {car.category}
                 </span>
                 <span className="text-xs text-muted-foreground font-medium">{car.year} Model</span>
+                {isBookedOut && (
+                  <span className="px-2.5 py-0.5 rounded text-xs font-bold bg-destructive text-destructive-foreground flex items-center gap-1">
+                    <Ban className="w-3.5 h-3.5" />
+                    <span>Booked Out</span>
+                  </span>
+                )}
               </div>
               <h2 className="text-xl sm:text-2xl font-black text-foreground mt-1">{car.name}</h2>
             </div>
@@ -58,6 +83,19 @@ export default function CarDetailModal({ car, defaultScope = "Inside Accra", onC
           {/* Modal Scrollable Body */}
           <div className="p-4 sm:p-6 overflow-y-auto space-y-6 flex-1 custom-scrollbar">
             
+            {/* Booked Out Banner if unavailable */}
+            {isBookedOut && (
+              <div className="p-4 rounded-2xl bg-destructive/10 border border-destructive/30 text-destructive space-y-1">
+                <h4 className="text-sm font-bold flex items-center gap-2">
+                  <Ban className="w-5 h-5" />
+                  <span>Vehicle Currently Unavailable / Booked Out</span>
+                </h4>
+                <p className="text-xs text-muted-foreground">
+                  This vehicle has been marked as booked out by our dispatch admin. Please check back later or select another available vehicle from our fleet.
+                </p>
+              </div>
+            )}
+
             {/* Gallery Section */}
             <div className="space-y-3">
               <div className="relative h-64 sm:h-80 md:h-96 rounded-2xl overflow-hidden bg-muted border border-border">
@@ -221,37 +259,25 @@ export default function CarDetailModal({ car, defaultScope = "Inside Accra", onC
             </div>
 
             <div className="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto">
-              <button
-                onClick={() => setShowEmailModal(true)}
-                className="w-full sm:w-auto px-5 py-3 rounded-xl bg-card hover:bg-primary hover:text-primary-foreground border border-border text-foreground font-bold text-xs flex items-center justify-center gap-2 transition-all"
-              >
-                <Mail className="w-4 h-4 text-primary" />
-                <span>Email Booking Request</span>
-              </button>
-
-              <a
-                href={whatsappUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-full sm:w-auto px-6 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/30 transition-all hover:scale-[1.02]"
-              >
-                <MessageSquare className="w-4 h-4 fill-white/20" />
-                <span>WhatsApp Booking Inquiry</span>
-              </a>
+              {isBookedOut ? (
+                <span className="px-5 py-2.5 rounded-xl bg-destructive/10 text-destructive border border-destructive/30 font-bold text-xs">
+                  Bookings Closed for this Vehicle
+                </span>
+              ) : (
+                <Link
+                  to={`/contact?car=${car.id}&scope=${encodeURIComponent(scope)}`}
+                  onClick={onClose}
+                  className="w-full sm:w-auto px-6 py-3 rounded-xl bg-secondary hover:bg-secondary/90 text-secondary-foreground font-black text-xs flex items-center justify-center gap-2 shadow-lg transition-transform active:scale-95"
+                >
+                  <CalendarCheck className="w-4 h-4" />
+                  <span>Book Now</span>
+                </Link>
+              )}
             </div>
           </div>
 
         </div>
       </div>
-
-      {/* Email Booking Modal */}
-      {showEmailModal && (
-        <EmailBookingModal
-          car={car}
-          defaultScope={scope}
-          onClose={() => setShowEmailModal(false)}
-        />
-      )}
     </>
   );
 }
